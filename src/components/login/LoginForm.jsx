@@ -3,15 +3,16 @@
 import { LogIn, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import RecoveryButton from "./RecoveryButton";
+import { login } from "@/utils/login";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert(email, password);
+    await login(email, password)
   };
 
   return (
