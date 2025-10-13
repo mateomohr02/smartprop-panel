@@ -1,7 +1,5 @@
 "use client";
 
-import Link from "next/link";
-
 import NavToggle from "./NavToggle";
 import NavigationLinks from "./NavigationLinks";
 
