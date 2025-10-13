@@ -11,7 +11,7 @@ const NavBar = () => {
   const [showLinks, setShowLinks] = useState(false);
 
   return (
-    <div className="flex flex-col ">
+    <div className="absolute z-50 w-full flex flex-col ">
       <div className="flex justify-between px-4 py-4 bg-primary z-50 border-b border-contrast">
         <div>
           <p className="text-contrast text-xl">

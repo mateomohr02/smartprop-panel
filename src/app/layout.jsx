@@ -9,11 +9,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="es">
-      <body
-        className={`antialiased bg-third`}
-      >
-        <NavBar/>
-        {children}
+      <body className={`antialiased bg-third`}>
+        <NavBar />
+        <section className="pt-16">{children}</section>
       </body>
     </html>
   );
