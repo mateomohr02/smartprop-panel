@@ -4,11 +4,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import NavLinkButton from "./NavLinkButton";
 import { LogOut } from "lucide-react";
 import { logout } from "@/utils/logout";
+import { useRouter } from "next/navigation";
 
 const NavigationLinks = ({ show, setShow }) => {
 
+  const router = useRouter();
+
   const handleLogout = () => {
-    logout()
+    logout();
+    router.push("/");
     setShow(false);
   };
 

@@ -4,15 +4,23 @@ import { LogIn, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import RecoveryButton from "./RecoveryButton";
 import { login } from "@/utils/login";
+import { useRouter } from "next/navigation";
 
 const LoginForm = () => {
+
+  const router = useRouter()
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await login(email, password)
+    const {data} = await login(email, password)
+    if (data) {
+      router.push('/dashboard')
+    }
+
   };
 
   return (
