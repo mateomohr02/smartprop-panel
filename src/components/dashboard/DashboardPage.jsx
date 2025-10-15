@@ -1,6 +1,7 @@
 
 import Leads from "./Leads"
 import ActiveProperties from "./ActiveProperties"
+import VisitsCounter from "./VisitsCounter"
 
 const DashboardPage = () => {
   return (
@@ -9,6 +10,7 @@ const DashboardPage = () => {
     >
         
         <ActiveProperties/>
+        <VisitsCounter/>
         <Leads/>
 
     </div>

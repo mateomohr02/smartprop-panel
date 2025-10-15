@@ -33,7 +33,7 @@ export function useFetchMetrics() {
         }
 
         const data = await res.json();
-        setMetrics(data);
+        setMetrics(data.data);
       } catch (err) {
         console.error("Error al obtener métricas:", err);
         setError(err.message);
@@ -43,7 +43,8 @@ export function useFetchMetrics() {
     };
 
     fetchMetrics();
-  }, []);
+  }, []); 
+  
 
   return { metrics, loading, error };
 }
