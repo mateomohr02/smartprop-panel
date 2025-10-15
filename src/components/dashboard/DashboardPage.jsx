@@ -1,5 +1,5 @@
 
-
+import Leads from "./Leads"
 import ActiveProperties from "./ActiveProperties"
 
 const DashboardPage = () => {
@@ -9,6 +9,7 @@ const DashboardPage = () => {
     >
         
         <ActiveProperties/>
+        <Leads/>
 
     </div>
   )
