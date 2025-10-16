@@ -14,12 +14,13 @@ export function useUpdateLeadStatus() {
 
     try {
       const token = localStorage.getItem("token");
+      const tenantId = localStorage.getItem("tenantId");
 
-      if (!token) {
-        throw new Error("No se encontró el token en localStorage");
+      if (!token || !tenantId) {
+        throw new Error("No se encontró el token o el tenantId.");
       }
 
-      const updatedLead = await putLeadStatus(leadId, status, token);
+      const updatedLead = await putLeadStatus(leadId, status, token, tenantId);
       setLead(updatedLead?.data || null);
 
       return updatedLead;

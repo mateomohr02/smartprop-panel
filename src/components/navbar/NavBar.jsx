@@ -6,6 +6,7 @@ import NavigationLinks from "./NavigationLinks";
 import { useState } from "react";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 const NavBar = () => {
   const [showLinks, setShowLinks] = useState(false);
@@ -14,9 +15,9 @@ const NavBar = () => {
     <div className="absolute z-50 w-full flex flex-col ">
       <div className="flex justify-between px-4 py-4 bg-primary z-50 border-b border-contrast">
         <div>
-          <p className="text-contrast text-xl">
+          <Link href="/dashboard" className="text-contrast text-xl">
           SmartProp
-          </p>
+          </Link>
         </div>
 
         <NavToggle

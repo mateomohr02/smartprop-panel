@@ -1,4 +1,4 @@
-export const putLeadStatus = async (leadId, status, token) => {
+export const putLeadStatus = async (leadId, status, token, tenantId) => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/lead/${leadId}`,
     {
@@ -6,6 +6,7 @@ export const putLeadStatus = async (leadId, status, token) => {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
+        "X-Tenant-Id": tenantId,
       },
       body: JSON.stringify({ status }),
     }
