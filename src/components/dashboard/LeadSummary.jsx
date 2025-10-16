@@ -1,3 +1,5 @@
+// LeadSummary.jsx
+import Link from "next/link";
 import RecentConsultsCard from "./RecentConsultsCard";
 
 const LeadSummary = ({ leads, loading, error }) => {
@@ -21,16 +23,22 @@ const LeadSummary = ({ leads, loading, error }) => {
       {/* 🧭 Título arriba a la izquierda */}
       <h3 className="font-medium p-4">Consultas Recientes</h3>
 
-      {leads.length == 0 ? (
-        <div className="flex flex-1 justify-center items-center pb-10">
-          <span>No hay Consultas Para Mostrar</span>
-        </div>
-      ) : (
-        <div className="">
-          {leads.map((l) => (
-            <RecentConsultsCard key={l.id} consult={l} />
-          ))}
-        </div>
+      <div className="flex-1 overflow-y-auto">
+        {leads.length === 0 ? (
+          <div className="flex flex-1 justify-center items-center pb-10">
+            <span>No hay Consultas Para Mostrar</span>
+          </div>
+        ) : (
+          leads.map((l) => <RecentConsultsCard key={l.id} consult={l} />)
+        )}
+      </div>
+      {leads.length > 0 && (
+        <Link
+          href="/consultas"
+          className="w-full text-center py-2 border-t hover:bg-third transition-all duration-300"
+        >
+          Ver Todas
+        </Link>
       )}
     </div>
   );
