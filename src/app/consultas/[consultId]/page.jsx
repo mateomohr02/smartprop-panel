@@ -1,6 +1,12 @@
+import ConsultDetailPage from "@/components/consultDetail/ConsultDetailPage"
+
 const page = () => {
   return (
-    <div>page</div>
+    <div>
+
+    <ConsultDetailPage/>
+
+    </div>
   )
 }
 
