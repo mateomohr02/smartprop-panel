@@ -32,8 +32,6 @@ const LeadSummary = ({ leads, loading, error }) => {
           ))}
         </div>
       )}
-
-      {/* 🔢 Números centrados */}
     </div>
   );
 };

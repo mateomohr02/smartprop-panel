@@ -5,9 +5,6 @@ import { useFetchMetrics } from "@/hooks/useFetchMetrics";
 const VisitsCounter = () => {
   const { metrics, loading, error } = useFetchMetrics();
 
-    console.log(metrics);
-    
-
   if (loading)
     return (
       <div className="min-w-[340px] max-w-[450px] min-h-[250px] max-h-[360px] bg-gray-100 rounded-lg shadow-md border border-gray-200 relative overflow-hidden">
