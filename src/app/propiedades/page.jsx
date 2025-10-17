@@ -1,6 +1,8 @@
+import PropiedadesPage from "@/components/propiedades/PropiedadesPage"
+
 const page = () => {
   return (
-    <div>page</div>
+    <PropiedadesPage/>
   )
 }
 

@@ -1,6 +1,7 @@
 // LeadSummary.jsx
 import Link from "next/link";
 import RecentConsultsCard from "./RecentConsultsCard";
+import { ChevronRight } from "lucide-react";
 
 const LeadSummary = ({ leads, loading, error }) => {
   if (loading)
@@ -19,7 +20,7 @@ const LeadSummary = ({ leads, loading, error }) => {
     );
 
   return (
-    <div className="relative min-w-[340px] max-w-[450px] min-h-[250px] max-h-[360px] bg-white rounded-lg shadow-md border border-gray-200 flex flex-col">
+    <div className="relative min-w-[340px] max-w-[450px] max-h-[360px] bg-white rounded-lg shadow-md border border-gray-200 flex flex-col">
       {/* 🧭 Título arriba a la izquierda */}
       <h3 className="font-medium p-4">Consultas Recientes</h3>
 
@@ -35,9 +36,9 @@ const LeadSummary = ({ leads, loading, error }) => {
       {leads.length > 0 && (
         <Link
           href="/consultas"
-          className="w-full text-center py-2 border-t hover:bg-third transition-all duration-300"
+          className="w-full flex justify-center text-center py-2 hover:bg-third transition-all duration-300"
         >
-          Ver Todas
+          Ver Todas <ChevronRight className="p-0.5"/>
         </Link>
       )}
     </div>
