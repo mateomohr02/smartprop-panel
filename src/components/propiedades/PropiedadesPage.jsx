@@ -8,9 +8,14 @@ const PropiedadesPage = () => {
   const { properties, loading, error } = useFetchProperties();
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-start">
       <ActionButton href="/propiedades/crear" text="+ Añadir Nueva Propiedad" />
-       <TableProperties properties={properties.data} loading={loading} error={error} /> 
+
+      <TableProperties
+        properties={properties.data}
+        loading={loading}
+        error={error}
+      />
     </div>
   );
 };
