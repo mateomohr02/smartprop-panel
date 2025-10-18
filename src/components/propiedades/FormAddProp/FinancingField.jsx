@@ -1,3 +1,5 @@
+"use client"
+
 const FinancingField = ({ property, setProperty }) => {
   const isDefault = property.financing === "Consultar";
 

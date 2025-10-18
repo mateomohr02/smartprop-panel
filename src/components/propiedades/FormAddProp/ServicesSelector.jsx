@@ -1,3 +1,5 @@
+"use client"
+
 const ServicesSelector = ({ property, setProperty }) => {
   return (
     <div className="w-full flex flex-col">

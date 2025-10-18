@@ -10,6 +10,9 @@ import SurfaceFields from "./SurfaceFields"
 import ServicesSelector from "./ServicesSelector";
 import AgeAndAvailability from "./AgeAndAvailability";
 import ConditionSelector from "./ConditionSelector";
+import RoomsAndBedroomsFields from "./RoomsAndBedroomsFields";
+import BathroomsAndGaragesFields from "./BathroomsAndGaragesFields";
+import AddressFields from "./AddressFields";
 
 const FormAddProperty = ({ property, setProperty }) => {
   return (
@@ -24,6 +27,9 @@ const FormAddProperty = ({ property, setProperty }) => {
       <ServicesSelector property={property} setProperty={setProperty}/>
       <ConditionSelector property={property} setProperty={setProperty}/>
       <AgeAndAvailability property={property} setProperty={setProperty}/>
+      <RoomsAndBedroomsFields property={property} setProperty={setProperty}/>
+      <BathroomsAndGaragesFields property={property} setProperty={setProperty}/>
+      <AddressFields property={property} setProperty={setProperty}/>
     </form>
   );
 };
