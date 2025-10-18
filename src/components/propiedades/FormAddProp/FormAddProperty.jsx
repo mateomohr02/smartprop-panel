@@ -8,6 +8,8 @@ import FinancingField from "./FinancingField";
 import MultimediaSelector from "./MultimediaSelector";
 import SurfaceFields from "./SurfaceFields"
 import ServicesSelector from "./ServicesSelector";
+import AgeAndAvailability from "./AgeAndAvailability";
+import ConditionSelector from "./ConditionSelector";
 
 const FormAddProperty = ({ property, setProperty }) => {
   return (
@@ -20,6 +22,8 @@ const FormAddProperty = ({ property, setProperty }) => {
       <MultimediaSelector property={property} setProperty={setProperty} />
       <SurfaceFields property={property} setProperty={setProperty}/>
       <ServicesSelector property={property} setProperty={setProperty}/>
+      <ConditionSelector property={property} setProperty={setProperty}/>
+      <AgeAndAvailability property={property} setProperty={setProperty}/>
     </form>
   );
 };

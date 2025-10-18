@@ -33,7 +33,7 @@ const AddPropertyPage = () => {
         condition:"",
         age:"",
         availabilityType:"Inmediate",
-        availabilityDate:"",
+        availabilityDate: null,
         rooms:"",
         bedrooms:"",
         bathrooms:"",
