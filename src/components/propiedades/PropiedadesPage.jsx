@@ -9,7 +9,7 @@ const PropiedadesPage = () => {
 
   return (
     <div className="flex flex-col items-start">
-      <ActionButton href="/propiedades/crear" text="+ Añadir Nueva Propiedad" />
+      <ActionButton href="/propiedades/agregar" text="+ Añadir Nueva Propiedad" />
 
       <TableProperties
         properties={properties.data}

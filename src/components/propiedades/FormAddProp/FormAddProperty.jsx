@@ -1,0 +1,23 @@
+"use client";
+
+import TitleDescriptionFields from "./TitleDescriptionFields";
+import PropertyTypeSelector from "./PropertyTypeSelector";
+import OperationTypeSelector from "./OperationTypeSelector";
+import PriceAndExpensesFields from "./PriceAndExpensesFields";
+import FinancingField from "./FinancingField";
+import MultimediaSelector from "./MultimediaSelector";
+
+const FormAddProperty = ({ property, setProperty }) => {
+  return (
+    <form className="w-full bg-contrast rounded-sm p-2 gap-2 flex flex-col items-center justify-center">
+      <TitleDescriptionFields property={property} setProperty={setProperty} />
+      <PropertyTypeSelector property={property} setProperty={setProperty}/>
+      <OperationTypeSelector property={property} setProperty={setProperty}/>
+      <PriceAndExpensesFields property={property} setProperty={setProperty}/>
+      <FinancingField property={property} setProperty={setProperty}/>
+      <MultimediaSelector property={property} setProperty={setProperty} />
+    </form>
+  );
+};
+
+export default FormAddProperty;
