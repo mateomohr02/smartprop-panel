@@ -6,6 +6,7 @@ import OperationTypeSelector from "./OperationTypeSelector";
 import PriceAndExpensesFields from "./PriceAndExpensesFields";
 import FinancingField from "./FinancingField";
 import MultimediaSelector from "./MultimediaSelector";
+import SurfaceFields from "./SurfaceFields"
 
 const FormAddProperty = ({ property, setProperty }) => {
   return (
@@ -16,6 +17,7 @@ const FormAddProperty = ({ property, setProperty }) => {
       <PriceAndExpensesFields property={property} setProperty={setProperty}/>
       <FinancingField property={property} setProperty={setProperty}/>
       <MultimediaSelector property={property} setProperty={setProperty} />
+      <SurfaceFields property={property} setProperty={setProperty}/>
     </form>
   );
 };
