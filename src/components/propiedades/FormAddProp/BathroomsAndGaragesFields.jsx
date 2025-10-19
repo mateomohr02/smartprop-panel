@@ -2,7 +2,7 @@
 
 const BathroomsAndGaragesFields = ({ property, setProperty }) => {
   return (
-    <div className="flex gap-2 rounded-sm">
+    <div className="flex gap-2 rounded-sm w-full">
       <div className="flex flex-col flex-1 gap-1">
         <label htmlFor="covered">Baños</label>
         <input

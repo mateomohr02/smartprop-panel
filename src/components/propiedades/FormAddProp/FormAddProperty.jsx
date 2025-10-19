@@ -13,6 +13,7 @@ import ConditionSelector from "./ConditionSelector";
 import RoomsAndBedroomsFields from "./RoomsAndBedroomsFields";
 import BathroomsAndGaragesFields from "./BathroomsAndGaragesFields";
 import AddressFields from "./AddressFields";
+import LocationFields from "./LocationFields";
 
 const FormAddProperty = ({ property, setProperty }) => {
   return (
@@ -30,6 +31,7 @@ const FormAddProperty = ({ property, setProperty }) => {
       <RoomsAndBedroomsFields property={property} setProperty={setProperty}/>
       <BathroomsAndGaragesFields property={property} setProperty={setProperty}/>
       <AddressFields property={property} setProperty={setProperty}/>
+      <LocationFields property={property} setProperty={setProperty}/>
     </form>
   );
 };

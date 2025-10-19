@@ -32,7 +32,7 @@ const AddressFields = ({ property, setProperty }) => {
   const isDefault = number.trim() === "";
 
   return (
-    <div className="flex gap-2 rounded-sm">
+    <div className="flex gap-2 rounded-sm w-full">
       <div className="flex flex-col w-2/3 gap-1">
         <label htmlFor="street">Calle</label>
         <input
