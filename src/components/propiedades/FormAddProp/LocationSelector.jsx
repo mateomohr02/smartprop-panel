@@ -80,7 +80,7 @@ const LocationSelector = ({ label, level, data, selected, onSelect }) => {
         <div className="w-full">
           <input
             type="text"
-            className="w-full p-2 drop-shadow-sm rounded-sm px-3 bg-third"
+            className="w-full mt-2 p-2 drop-shadow-sm rounded-sm px-3 bg-third"
             placeholder={`Ingrese ${label.toLowerCase()}`}
             value={customValue}
             onChange={handleCustomChange}

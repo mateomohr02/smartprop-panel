@@ -14,6 +14,7 @@ import RoomsAndBedroomsFields from "./RoomsAndBedroomsFields";
 import BathroomsAndGaragesFields from "./BathroomsAndGaragesFields";
 import AddressFields from "./AddressFields";
 import LocationFields from "./LocationFields";
+import MapLocationField from "./MapLocationField";
 
 const FormAddProperty = ({ property, setProperty }) => {
   return (
@@ -32,6 +33,7 @@ const FormAddProperty = ({ property, setProperty }) => {
       <BathroomsAndGaragesFields property={property} setProperty={setProperty}/>
       <AddressFields property={property} setProperty={setProperty}/>
       <LocationFields property={property} setProperty={setProperty}/>
+      <MapLocationField property={property} setProperty={setProperty} />
     </form>
   );
 };

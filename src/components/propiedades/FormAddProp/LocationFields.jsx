@@ -16,9 +16,9 @@ const LocationFields = ({ property, setProperty }) => {
 
   return (
     <div className="w-full flex flex-col gap-1">
-      <label className="font-medium">Ubicación</label>
+      <label>Ubicación</label>
 
-      <div className="border border-gray-200 px-2 pb-2 py-1 flex flex-col gap-3 rounded-sm bg-third/40">
+      <div className="border border-gray-200 px-2 pb-2 py-1 flex flex-col gap-2 rounded-sm bg-contrast">
         {/* Country */}
         <LocationSelector
           label="País"
