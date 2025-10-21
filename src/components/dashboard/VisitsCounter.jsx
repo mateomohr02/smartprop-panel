@@ -4,6 +4,7 @@ import { useFetchMetrics } from "@/hooks/useFetchMetrics";
 
 const VisitsCounter = () => {
   const { metrics, loading, error } = useFetchMetrics();
+ 
 
   if (loading)
     return (
@@ -28,7 +29,11 @@ const VisitsCounter = () => {
       {/* 🔢 Números centrados */}
       <div className="flex flex-1 justify-center items-center">
         <div className="flex items-baseline justify-center gap-1 pb-10">
-          <span className="text-8xl font-semibold">{metrics.visit_site[0].total}</span>
+
+          {
+            metrics.visit_site.length !== 0  ?  <span className="text-8xl font-semibold">{metrics.visit_site[0].total}</span> : <span>Todavía no hubieron visitas este mes.</span>
+          }
+         
         </div>
       </div>
     </div>

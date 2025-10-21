@@ -122,7 +122,7 @@ const RoomsFields = ({ property, setProperty }) => {
         {/* Input de nombre + cantidad */}
         <div className="grid grid-cols-2 gap-2">
           <div className="flex flex-col relative">
-            <label>Nombre del ambiente</label>
+            <label>Nombre</label>
             <input
               type="text"
               value={inputValue}
@@ -158,7 +158,7 @@ const RoomsFields = ({ property, setProperty }) => {
               )}
           </div>
 
-          <div className="flex flex-col">
+          <div className="flex flex-col justify-end">
             <label>Cantidad</label>
             <input
               type="number"
