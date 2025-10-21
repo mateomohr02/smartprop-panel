@@ -47,7 +47,7 @@ const AddPropertyPage = () => {
         },
         mapLocation:{
             lat:"",
-            long:""
+            lng:""
         },
         otherRooms:[],
         comodities:[],

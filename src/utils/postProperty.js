@@ -1,9 +1,9 @@
-export const putProperty = async (property, token, tenantId) => {
+export const postProperty = async (property, token, tenantId) => {
 
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/properties/edit`,
+    const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/properties/create`,
     {
-      method: "PUT",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -16,10 +16,11 @@ export const putProperty = async (property, token, tenantId) => {
   if (!response.ok) {
     const errorText = await response.text();
     throw new Error(
-      `Error al actualizar la propiedad: ${response.status} - ${errorText}`
+      `Error al agergar la propiedad: ${response.status} - ${errorText}`
     );
   }
 
   const data = await response.json();
   return data;
-};
+
+}
