@@ -17,6 +17,7 @@ import LocationFields from "./LocationFields";
 import MapLocationField from "./MapLocationField";
 import ComoditiesField from "./ComoditiesField";
 import CharacteristicField from "./CharacteristicField";
+import RoomsFields from "./RoomsFields";
 
 const FormAddProperty = ({ property, setProperty }) => {
   return (
@@ -38,6 +39,7 @@ const FormAddProperty = ({ property, setProperty }) => {
       <MapLocationField property={property} setProperty={setProperty} />
       <ComoditiesField property={property} setProperty={setProperty}/>
       <CharacteristicField property={property} setProperty={setProperty}/>
+      <RoomsFields property={property} setProperty={setProperty}/>
     </form>
   );
 };
