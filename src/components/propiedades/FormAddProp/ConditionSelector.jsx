@@ -25,7 +25,7 @@ const ConditionSelector = ({ property, setProperty }) => {
             );
             setProperty({
               ...property,
-              condition: selected || { display: "", slug: "" },
+              condition: selected.slug,
             });
           }}
           className="appearance-none w-full p-2 rounded-sm px-3 pr-10 bg-third drop-shadow-sm"

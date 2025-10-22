@@ -26,7 +26,11 @@ const AddressFields = ({ property, setProperty }) => {
       street.trim() && (number.trim() || "S/N")
         ? `${street.trim()} ${number.trim() || "S/N"}`
         : "";
-    setProperty({ ...property, address: formattedAddress });
+
+    // Evitar actualizar si el valor no cambió
+    if (formattedAddress !== property.address) {
+      setProperty((prev) => ({ ...prev, address: formattedAddress }));
+    }
   }, [street, number]);
 
   const isDefault = number.trim() === "";
@@ -41,6 +45,8 @@ const AddressFields = ({ property, setProperty }) => {
           className="p-2 bg-third rounded-sm drop-shadow-sm w-full"
           value={street}
           onChange={(e) => setStreet(e.target.value)}
+          onInput={(e) => setStreet(e.target.value)} // ✅ captura autocompletado
+          autoComplete="street-address"
         />
       </div>
 
@@ -54,6 +60,8 @@ const AddressFields = ({ property, setProperty }) => {
           placeholder={isDefault ? "S/N" : ""}
           value={isDefault ? "" : number}
           onChange={(e) => setNumber(e.target.value)}
+          onInput={(e) => setNumber(e.target.value)} // ✅ captura autocompletado
+          autoComplete="address-line2"
         />
       </div>
     </div>

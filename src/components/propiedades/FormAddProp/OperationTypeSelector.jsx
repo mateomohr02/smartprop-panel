@@ -7,7 +7,7 @@ const OperationTypeSelector = ({ property, setProperty }) => {
   const availableOperations = [
     { display: "Venta", slug: "sale" },
     { display: "Alquiler", slug: "rent" },
-    { display: "Alquiler Temporal", slug: "short-tern" },
+    { display: "Alquiler Temporal", slug: "short-term" },
   ];
 
   return (
@@ -18,9 +18,9 @@ const OperationTypeSelector = ({ property, setProperty }) => {
         <select
           name="propertyType"
           defaultValue={
-            property.operation.display === null
+            property.operation === ""
               ? "Seleccione la Operación"
-              : property.operation.display
+              : property.operation
           }
           className="appearance-none w-full p-2 rounded-sm px-3 pr-10 bg-third drop-shadow-sm"
           onChange={(e) =>

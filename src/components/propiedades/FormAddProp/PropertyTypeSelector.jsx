@@ -9,7 +9,7 @@ const PropertyTypeSelector = ({ property, setProperty }) => {
 
   // Estado interno del select
   const [selectedType, setSelectedType] = useState(
-    property.propertyType ? property.propertyType : ""
+    property.propertyTypeSlug ? property.propertyTypeSlug : ""
   );
   // Estado para "otro"
   const [customType, setCustomType] = useState("");
@@ -20,10 +20,10 @@ const PropertyTypeSelector = ({ property, setProperty }) => {
 
     if (value === "other") {
       // No pisamos propertyType, solo dejamos vacío
-      setProperty({ ...property, propertyType: "" });
+      setProperty({ ...property, propertyTypeSlug: "" });
     } else {
       setCustomType("");
-      setProperty({ ...property, propertyType: value });
+      setProperty({ ...property, propertyTypeSlug: value });
     }
   };
 
@@ -32,7 +32,7 @@ const PropertyTypeSelector = ({ property, setProperty }) => {
     setCustomType(value);
     // Guardamos el valor personalizado en propertyType,
     // pero SIN tocar el selectedType, que sigue siendo "other"
-    setProperty({ ...property, propertyType: value });
+    setProperty({ ...property, propertyTypeSlug: value });
   };
 
   if (loading) {

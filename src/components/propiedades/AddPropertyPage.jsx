@@ -8,14 +8,13 @@ const AddPropertyPage = () => {
 
     const [newProperty, setNewProperty] = useState({
         title:"",
-        propertyType:"", //Hay que obtenerlos de la db 
         propertyTypeSlug:"",
         description:"",
         operation:"",
         price:"",
-        priceFIAT:"",
+        priceFIAT:null,
         expenses:"",
-        expensesFIAT:"",
+        expensesFIAT:null,
         financing:"Consultar",
         multimedia:{
             images:[],
@@ -30,9 +29,9 @@ const AddPropertyPage = () => {
             water:true,
             gas:true
         },
-        condition:"",
+        condition:null,
         age:"",
-        availabilityType:"Inmediate",
+        availabilityType:"inmediate",
         availabilityDate: null,
         rooms:"",
         bedrooms:"",

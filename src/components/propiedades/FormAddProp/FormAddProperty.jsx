@@ -19,10 +19,29 @@ import ComoditiesField from "./ComoditiesField";
 import CharacteristicField from "./CharacteristicField";
 import RoomsFields from "./RoomsFields";
 import ActionButtons from "./ActionButtons";
+import { useSubmitProperty } from "@/hooks/useSubmitProperty";
 
 const FormAddProperty = ({ property, setProperty }) => {
+
+  const { submitProperty, progress, loading, error } = useSubmitProperty();
+
+  console.log(progress, loading, error);
+  
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await submitProperty(property);
+      console.log("✅ Propiedad subida:", response);
+    } catch (err) {
+      console.error("❌ Error al subir:", err);
+    }
+  };
+
   return (
-    <form className="w-full bg-contrast rounded-sm p-2 gap-2 flex flex-col items-center justify-center">
+    <form 
+    onSubmit={handleSubmit}
+    className="w-full bg-contrast rounded-sm p-2 gap-2 flex flex-col items-center justify-center">
       <TitleDescriptionFields property={property} setProperty={setProperty} />
       <PropertyTypeSelector property={property} setProperty={setProperty}/>
       <OperationTypeSelector property={property} setProperty={setProperty}/>

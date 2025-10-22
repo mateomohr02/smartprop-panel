@@ -1,7 +1,7 @@
 export const postProperty = async (property, token, tenantId) => {
 
     const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/properties/create`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/properties/create`,
     {
       method: "POST",
       headers: {

@@ -19,7 +19,7 @@ const ComoditiesField = ({ property, setProperty }) => {
       (c) =>
         normalizeText(c.name).includes(normalizeText(inputValue)) &&
         !selectedComodities.some(
-          (sel) => normalizeText(sel.name) === normalizeText(c.name)
+          (sel) => normalizeText(sel.slug) === normalizeText(c.slug)
         )
     ) || [];
 
@@ -32,10 +32,10 @@ const ComoditiesField = ({ property, setProperty }) => {
     setSuggestionsVisible(false);
   };
 
-  const handleRemoveComodity = (comodityName) => {
+  const handleRemoveComodity = (slug) => {
     setProperty({
       ...property,
-      comodities: selectedComodities.filter((c) => c.name !== comodityName),
+      comodities: selectedComodities.filter((c) => c.slug !== slug),
     });
   };
 
@@ -43,31 +43,36 @@ const ComoditiesField = ({ property, setProperty }) => {
     if (e.key === "Enter" && inputValue.trim() !== "") {
       e.preventDefault();
 
-      // Si no existe en la lista de sugerencias, crear una nueva
       const existing = comodities.find(
         (c) => normalizeText(c.name) === normalizeText(inputValue)
       );
 
-      const newComodity = existing || { name: inputValue.trim() };
-      handleAddComodity(newComodity);
+      // Si existe, usar su slug; si no, generar uno nuevo
+      const newComodity =
+        existing || {
+          slug: normalizeText(inputValue.trim().replace(/\s+/g, "-")),
+          name: inputValue.trim(),
+        };
+
+      handleAddComodity({ slug: newComodity.slug });
     }
   };
 
   return (
     <div className="flex flex-col gap-1 w-full">
-      <label>Comodities</label>
+      <label>Comodidades</label>
 
       <div className="bg-third p-2 rounded-sm flex flex-wrap gap-2 items-center">
         {selectedComodities.map((c) => (
           <div
-            key={c.name}
+            key={c.slug}
             className="bg-contrast px-2 py-1 rounded-sm flex items-center gap-1"
           >
-            <span className="text-sm">{c.name}</span>
+            <span className="text-sm">{c.slug}</span>
             <X
               size={14}
               className="cursor-pointer hover:text-red-500"
-              onClick={() => handleRemoveComodity(c.name)}
+              onClick={() => handleRemoveComodity(c.slug)}
             />
           </div>
         ))}
@@ -94,7 +99,7 @@ const ComoditiesField = ({ property, setProperty }) => {
               <li
                 key={c.id}
                 className="p-2 text-sm hover:bg-third cursor-pointer"
-                onClick={() => handleAddComodity(c)}
+                onClick={() => handleAddComodity({ slug: c.slug })}
               >
                 {c.name}
               </li>
