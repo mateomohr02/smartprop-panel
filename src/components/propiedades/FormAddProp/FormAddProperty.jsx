@@ -25,9 +25,6 @@ const FormAddProperty = ({ property, setProperty }) => {
 
   const { submitProperty, progress, loading, error } = useSubmitProperty();
 
-  console.log(progress, loading, error);
-  
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
