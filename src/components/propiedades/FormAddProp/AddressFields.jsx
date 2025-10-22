@@ -45,8 +45,8 @@ const AddressFields = ({ property, setProperty }) => {
           className="p-2 bg-third rounded-sm drop-shadow-sm w-full"
           value={street}
           onChange={(e) => setStreet(e.target.value)}
-          onInput={(e) => setStreet(e.target.value)} // ✅ captura autocompletado
-          autoComplete="street-address"
+          onInput={(e) => setStreet(e.target.value)}
+          autoComplete="new-street"
         />
       </div>
 
@@ -60,8 +60,8 @@ const AddressFields = ({ property, setProperty }) => {
           placeholder={isDefault ? "S/N" : ""}
           value={isDefault ? "" : number}
           onChange={(e) => setNumber(e.target.value)}
-          onInput={(e) => setNumber(e.target.value)} // ✅ captura autocompletado
-          autoComplete="address-line2"
+          onInput={(e) => setNumber(e.target.value)}
+          autoComplete="new-number"
         />
       </div>
     </div>
