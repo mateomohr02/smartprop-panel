@@ -40,7 +40,7 @@ const ToggleButton = ({ flag, type, propertyId, setDisplayProperties }) => {
   return (
     <button
       onClick={handleClick}
-      className={`inline-block w-10 h-5 rounded-full relative transition-all duration-200 ${
+      className={`inline-block w-10 h-5 rounded-full cursor-pointer relative transition-all duration-200 ${
         flag ? "bg-green-500" : "bg-gray-300"
       }`}
     >

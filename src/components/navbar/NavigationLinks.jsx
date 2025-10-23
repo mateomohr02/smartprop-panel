@@ -59,7 +59,7 @@ const NavigationLinks = ({ show, setShow }) => {
                 />
                 <button
                   onClick={() => handleLogout()}
-                  className="py-2 text-contrast flex justify-center items-center"
+                  className="py-2 text-contrast flex justify-center items-center cursor-pointer"
                 >
                   <LogOut className="mx-1 px-0.5" /> Cerrar Sesión{" "}
                 </button>

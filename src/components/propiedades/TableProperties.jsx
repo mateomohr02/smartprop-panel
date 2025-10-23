@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import ToggleButton from "./ToggleButton";
+import Link from "next/link";
 
 const TableProperties = ({ properties }) => {
   const [displayProperties, setDisplayProperties] = useState(properties);
@@ -43,7 +44,9 @@ const TableProperties = ({ properties }) => {
               <tr key={property.id} className="bg-third">
                 {/* Nombre */}
                 <td className="w-2/3 sm:w-2/7 px-3 py-2 truncate border-r max-w-[250px]">
+                <Link href={`/propiedades/${property.id}`} className="hover:underline">
                   {property.title}
+                </Link>
                 </td>
 
                 {/* Estado */}
@@ -54,6 +57,7 @@ const TableProperties = ({ properties }) => {
                       type="isActive"
                       propertyId={property.id}
                       setDisplayProperties={setDisplayProperties}
+                      
                     />
                   </div>
                 </td>
