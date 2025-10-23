@@ -4,10 +4,17 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import { normalizeText } from "@/helpers/normalizeText";
 import { useFetchOtherRooms } from "@/hooks/useFetchOtherRooms";
+import { validateAddPropertyForm } from "@/utils/validateAddPropertyForm";
 
-const RoomsFields = ({ property, setProperty }) => {
+const RoomsFields = ({
+  property,
+  setProperty,
+  errors,
+  setErrors,
+  hasTriedSubmit,
+}) => {
   const [inputValue, setInputValue] = useState("");
-  const [quantity, setQuantity] = useState(""); // 🔹 ahora inicia vacío
+  const [quantity, setQuantity] = useState(""); 
   const [sizes, setSizes] = useState([""]);
   const [suggestionsVisible, setSuggestionsVisible] = useState(false);
   const { rooms } = useFetchOtherRooms();
@@ -30,7 +37,7 @@ const RoomsFields = ({ property, setProperty }) => {
       (r) => normalizeText(r.name) === normalizeText(inputValue)
     );
 
-    const finalQuantity = parseInt(quantity) || 1; // 🔹 usa 1 si está vacío o inválido
+    const finalQuantity = parseInt(quantity) || 1; 
 
     const newRoom = {
       roomSlug: existing ? existing.name : inputValue.trim(),
@@ -49,7 +56,14 @@ const RoomsFields = ({ property, setProperty }) => {
       otherRooms: [...selectedRooms, newRoom],
     });
 
-    // Reset
+    if (hasTriedSubmit) {
+      const validationErrors = validateAddPropertyForm({
+        ...property,
+        otherRooms: [...selectedRooms, newRoom],
+      });
+      setErrors(validationErrors);
+    }
+
     setInputValue("");
     setQuantity("");
     setSizes([""]);
@@ -61,10 +75,17 @@ const RoomsFields = ({ property, setProperty }) => {
       ...property,
       otherRooms: selectedRooms.filter((r) => r.roomSlug !== roomSlug),
     });
+
+    if (hasTriedSubmit) {
+      const validationErrors = validateAddPropertyForm({
+        ...property,
+        otherRooms: selectedRooms.filter((r) => r.roomSlug !== roomSlug),
+      });
+      setErrors(validationErrors);
+    }
   };
 
   const handleQuantityChange = (val) => {
-    // 🔹 acepta vacío sin forzar a 1
     if (val === "") {
       setQuantity("");
       setSizes([""]);
@@ -166,7 +187,7 @@ const RoomsFields = ({ property, setProperty }) => {
               value={quantity}
               onChange={(e) => handleQuantityChange(e.target.value)}
               className="rounded-sm p-2 bg-third focus:outline-none drop-shadow-sm"
-              placeholder="1" // 🔹 ahora muestra el 1 como referencia visual
+              placeholder="1" 
             />
           </div>
         </div>
@@ -199,6 +220,12 @@ const RoomsFields = ({ property, setProperty }) => {
           Agregar
         </button>
       </div>
+
+      {errors.otherRooms && (
+        <label htmlFor="otherRoomsError" className="text-red-500 text-sm">
+          {errors.otherRooms}
+        </label>
+      )}
     </div>
   );
 };

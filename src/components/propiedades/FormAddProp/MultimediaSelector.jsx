@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef } from "react";
+import React, { useRef } from "react";
 import { CirclePlus, Trash2, Camera } from "lucide-react";
+import { validateAddPropertyForm } from "@/utils/validateAddPropertyForm";
 
-const MultimediaField = ({ property, setProperty }) => {
+const MultimediaField = ({ property, setProperty, errors, setErrors, hasTriedSubmit }) => {
   const fileInputRef = useRef(null);
   const cameraInputRef = useRef(null);
 
@@ -13,23 +14,37 @@ const MultimediaField = ({ property, setProperty }) => {
     const images = files.filter((f) => f.type.startsWith("image/"));
     const videos = files.filter((f) => f.type.startsWith("video/"));
 
-    setProperty({
+    const updated = {
       ...property,
       multimedia: {
         images: [...property.multimedia.images, ...images],
         video: [...property.multimedia.video, ...videos],
       },
-    });
+    };
+
+    setProperty(updated);
+
+    if (hasTriedSubmit) {
+      const validationErrors = validateAddPropertyForm(updated);
+      setErrors(validationErrors);
+    }
   };
 
   const handleDelete = (fileName) => {
-    setProperty({
+    const updated = {
       ...property,
       multimedia: {
         images: property.multimedia.images.filter((f) => f.name !== fileName),
         video: property.multimedia.video.filter((f) => f.name !== fileName),
       },
-    });
+    };
+
+    setProperty(updated);
+
+    if (hasTriedSubmit) {
+      const validationErrors = validateAddPropertyForm(updated);
+      setErrors(validationErrors);
+    }
   };
 
   const triggerFileInput = () => fileInputRef.current.click();
@@ -42,12 +57,17 @@ const MultimediaField = ({ property, setProperty }) => {
 
   return (
     <div className="flex flex-col gap-1 w-full">
-      <label>Multimedia</label>
-      <div className="flex flex-col w-full gap-2">
+      <div className="flex justify-between items-baseline">
+        <label htmlFor="multimedia">Multimedia</label>
+        <label htmlFor="multimediaError" className="text-red-500 text-sm">
+          {errors["multimedia.images"] && errors["multimedia.images"]}
+        </label>
+      </div>
 
-        {/* Campo para agregar archivos y cámara */}
+      <div className="flex flex-col w-full gap-2">
+        {/* Botones de carga */}
         <div className="flex w-full gap-2">
-          {/* Botón subir archivos */}
+          {/* Subir archivos */}
           <div
             onClick={triggerFileInput}
             className="w-2/3 bg-third drop-shadow-sm rounded-sm p-3 flex items-center justify-center cursor-pointer"
@@ -63,7 +83,7 @@ const MultimediaField = ({ property, setProperty }) => {
             />
           </div>
 
-          {/* Botón cámara */}
+          {/* Abrir cámara */}
           <div
             onClick={triggerCameraInput}
             className="w-1/3 bg-third drop-shadow-sm rounded-sm p-3 flex items-center justify-center cursor-pointer"
@@ -71,7 +91,7 @@ const MultimediaField = ({ property, setProperty }) => {
             <Camera size={22} className="opacity-50" />
             <input
               ref={cameraInputRef}
-              type=""
+              type="file"
               accept="image/*"
               capture="environment"
               onChange={handleFilesChange}

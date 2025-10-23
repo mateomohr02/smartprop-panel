@@ -4,8 +4,15 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import { normalizeText } from "@/helpers/normalizeText";
 import { useFetchComodities } from "@/hooks/useFetchComodities";
+import { validateAddPropertyForm } from "@/utils/validateAddPropertyForm";
 
-const ComoditiesField = ({ property, setProperty }) => {
+const ComoditiesField = ({
+  property,
+  setProperty,
+  errors,
+  setErrors,
+  hasTriedSubmit,
+}) => {
   const { comodities, loading, error } = useFetchComodities();
 
   const [inputValue, setInputValue] = useState("");
@@ -30,6 +37,14 @@ const ComoditiesField = ({ property, setProperty }) => {
     });
     setInputValue("");
     setSuggestionsVisible(false);
+
+    if (hasTriedSubmit) {
+      const validationErrors = validateAddPropertyForm({
+        ...property,
+        comodities: [...selectedComodities, comodity],
+      });
+      setErrors(validationErrors);
+    }
   };
 
   const handleRemoveComodity = (slug) => {
@@ -37,6 +52,14 @@ const ComoditiesField = ({ property, setProperty }) => {
       ...property,
       comodities: selectedComodities.filter((c) => c.slug !== slug),
     });
+
+    if (hasTriedSubmit) {
+      const validationErrors = validateAddPropertyForm({
+        ...property,
+        comodities: selectedComodities.filter((c) => c.slug !== slug),
+      });
+      setErrors(validationErrors);
+    }
   };
 
   const handleKeyDown = (e) => {
@@ -90,6 +113,12 @@ const ComoditiesField = ({ property, setProperty }) => {
           placeholder="Agregar..."
         />
       </div>
+
+      {errors.comodities && (
+        <label htmlFor="comoditiesError" className="text-red-500 text-sm">
+          {errors.comodities}
+        </label>
+      )}
 
       {suggestionsVisible &&
         inputValue.trim() !== "" &&

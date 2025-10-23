@@ -4,8 +4,15 @@ import { useParseGoogleMapsURL } from "@/hooks/useParseGoogleMapsURL";
 import { Clipboard } from "lucide-react";
 import { useEffect, useState } from "react";
 import MapPreview from "./MapPreview";
+import { validateAddPropertyForm } from "@/utils/validateAddPropertyForm";
 
-const MapLocationField = ({ property, setProperty }) => {
+const MapLocationField = ({
+  property,
+  setProperty,
+  errors,
+  setErrors,
+  hasTriedSubmit,
+}) => {
   const [linkInput, setLinkInput] = useState("");
   const [shouldParse, setShouldParse] = useState(false);
   const [clipboardError, setClipboardError] = useState(null);
@@ -22,6 +29,14 @@ const MapLocationField = ({ property, setProperty }) => {
         mapLocation: location,
       }));
       setShouldParse(false);
+
+      if (hasTriedSubmit) {
+        const validationErrors = validateAddPropertyForm({
+          ...property,
+          mapLocation: location,
+        });
+        setErrors(validationErrors);
+      }
     }
   }, [location, loading, error, shouldParse, setProperty]);
 
@@ -38,10 +53,24 @@ const MapLocationField = ({ property, setProperty }) => {
     }
   };
 
+  const handleSendLocation = () => {
+    setShouldParse(true);
+
+    if (hasTriedSubmit) {
+      const validationErrors = validateAddPropertyForm(property);
+      setErrors(validationErrors);
+    }
+  };
+
   return (
     <div className="w-full flex flex-col gap-1">
       <div className="w-full flex flex-row justify-between">
         <label htmlFor="map">Mapa</label>
+        {errors.mapLocation && (
+          <label htmlFor="mapError" className="text-red-500 text-sm">
+            {errors.mapLocation}
+          </label>
+        )}
       </div>
 
       <div className="border border-gray-200 px-2 pb-2 py-1 flex gap-2 rounded-sm">
@@ -78,7 +107,7 @@ const MapLocationField = ({ property, setProperty }) => {
           <button
             type="button"
             className="py-2 px-4 rounded-sm bg-primary text-contrast hover:bg-secondary transition-all duration-300"
-            onClick={() => setShouldParse(true)}
+            onClick={handleSendLocation}
             disabled={!linkInput || loading}
           >
             {loading ? "Procesando..." : "Enviar"}
@@ -86,10 +115,8 @@ const MapLocationField = ({ property, setProperty }) => {
         </div>
       </div>
 
-      {error && <p className="text-red-500 text-sm mt-1">⚠️ {error}</p>}
-      {location && (
-        <MapPreview property={property}/>
-      )}
+      {error && <p className="text-red-500 text-sm mt-1"> {error}</p>}
+      {location && <MapPreview property={property} />}
     </div>
   );
 };

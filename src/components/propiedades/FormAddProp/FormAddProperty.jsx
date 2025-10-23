@@ -1,12 +1,14 @@
 "use client";
 
+import { useState } from "react";
+
 import TitleDescriptionFields from "./TitleDescriptionFields";
 import PropertyTypeSelector from "./PropertyTypeSelector";
 import OperationTypeSelector from "./OperationTypeSelector";
 import PriceAndExpensesFields from "./PriceAndExpensesFields";
 import FinancingField from "./FinancingField";
 import MultimediaSelector from "./MultimediaSelector";
-import SurfaceFields from "./SurfaceFields"
+import SurfaceFields from "./SurfaceFields";
 import ServicesSelector from "./ServicesSelector";
 import AgeAndAvailability from "./AgeAndAvailability";
 import ConditionSelector from "./ConditionSelector";
@@ -19,14 +21,28 @@ import ComoditiesField from "./ComoditiesField";
 import CharacteristicField from "./CharacteristicField";
 import RoomsFields from "./RoomsFields";
 import ActionButtons from "./ActionButtons";
+
 import { useSubmitProperty } from "@/hooks/useSubmitProperty";
+import { validateAddPropertyForm } from "@/utils/validateAddPropertyForm";
 
 const FormAddProperty = ({ property, setProperty }) => {
-
   const { submitProperty, progress, loading, error } = useSubmitProperty();
+
+  const [errors, setErrors] = useState({});
+  const [hasTriedSubmit, setHasTriedSubmit] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setHasTriedSubmit(true);
+    const validationErrors = validateAddPropertyForm(property);
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length > 0) {
+      console.log("Errores de validación:", validationErrors);
+      return;
+    }
+
     try {
       const response = await submitProperty(property);
       console.log("✅ Propiedad subida:", response);
@@ -36,28 +52,32 @@ const FormAddProperty = ({ property, setProperty }) => {
   };
 
   return (
-    <form 
-    onSubmit={handleSubmit}
-    className="w-full bg-contrast rounded-sm p-2 gap-2 flex flex-col items-center justify-center">
-      <TitleDescriptionFields property={property} setProperty={setProperty} />
-      <PropertyTypeSelector property={property} setProperty={setProperty}/>
-      <OperationTypeSelector property={property} setProperty={setProperty}/>
-      <PriceAndExpensesFields property={property} setProperty={setProperty}/>
-      <FinancingField property={property} setProperty={setProperty}/>
-      <MultimediaSelector property={property} setProperty={setProperty} />
-      <SurfaceFields property={property} setProperty={setProperty}/>
-      <ServicesSelector property={property} setProperty={setProperty}/>
-      <ConditionSelector property={property} setProperty={setProperty}/>
-      <AgeAndAvailability property={property} setProperty={setProperty}/>
-      <RoomsAndBedroomsFields property={property} setProperty={setProperty}/>
-      <BathroomsAndGaragesFields property={property} setProperty={setProperty}/>
-      <AddressFields property={property} setProperty={setProperty}/>
-      <LocationFields property={property} setProperty={setProperty}/>
-      <MapLocationField property={property} setProperty={setProperty} />
-      <ComoditiesField property={property} setProperty={setProperty}/>
-      <CharacteristicField property={property} setProperty={setProperty}/>
-      <RoomsFields property={property} setProperty={setProperty}/>
-      <ActionButtons property={property} setProperty={setProperty}/>
+    <form
+      onSubmit={handleSubmit}
+      className="w-full bg-contrast rounded-sm p-2 gap-2 flex flex-col items-center justify-center"
+    >
+      <TitleDescriptionFields property={property} setProperty={setProperty} errors={errors} setErrors={setErrors} hasTriedSubmit={hasTriedSubmit}/>
+      <PropertyTypeSelector property={property} setProperty={setProperty} errors={errors} setErrors={setErrors} hasTriedSubmit={hasTriedSubmit}/>
+      <OperationTypeSelector property={property} setProperty={setProperty} errors={errors} setErrors={setErrors} hasTriedSubmit={hasTriedSubmit}/>
+      <PriceAndExpensesFields property={property} setProperty={setProperty} errors={errors} setErrors={setErrors} hasTriedSubmit={hasTriedSubmit}/>
+      <FinancingField property={property} setProperty={setProperty} errors={errors} setErrors={setErrors} hasTriedSubmit={hasTriedSubmit}/>
+      <MultimediaSelector property={property} setProperty={setProperty} errors={errors} setErrors={setErrors} hasTriedSubmit={hasTriedSubmit}/>
+      <SurfaceFields property={property} setProperty={setProperty} errors={errors} setErrors={setErrors} hasTriedSubmit={hasTriedSubmit}/>
+      <ServicesSelector property={property} setProperty={setProperty} errors={errors} setErrors={setErrors} hasTriedSubmit={hasTriedSubmit}/>
+      <ConditionSelector property={property} setProperty={setProperty} errors={errors} setErrors={setErrors} hasTriedSubmit={hasTriedSubmit}/>
+      <AgeAndAvailability property={property} setProperty={setProperty} errors={errors} setErrors={setErrors} hasTriedSubmit={hasTriedSubmit}/>
+      <RoomsAndBedroomsFields property={property} setProperty={setProperty} errors={errors} setErrors={setErrors} hasTriedSubmit={hasTriedSubmit}/>
+      <BathroomsAndGaragesFields
+        property={property}
+        setProperty={setProperty}
+      errors={errors} setErrors={setErrors} hasTriedSubmit={hasTriedSubmit}/>
+      <AddressFields property={property} setProperty={setProperty} errors={errors} setErrors={setErrors} hasTriedSubmit={hasTriedSubmit}/>
+      <LocationFields property={property} setProperty={setProperty} errors={errors} setErrors={setErrors} hasTriedSubmit={hasTriedSubmit}/>
+      <MapLocationField property={property} setProperty={setProperty} errors={errors} setErrors={setErrors} hasTriedSubmit={hasTriedSubmit}/>
+      <ComoditiesField property={property} setProperty={setProperty} errors={errors} setErrors={setErrors} hasTriedSubmit={hasTriedSubmit}/>
+      <CharacteristicField property={property} setProperty={setProperty} errors={errors} setErrors={setErrors} hasTriedSubmit={hasTriedSubmit}/>
+      <RoomsFields property={property} setProperty={setProperty} errors={errors} setErrors={setErrors} hasTriedSubmit={hasTriedSubmit}/>
+      <ActionButtons property={property} setProperty={setProperty} errors={errors} setErrors={setErrors} hasTriedSubmit={hasTriedSubmit}/>
     </form>
   );
 };

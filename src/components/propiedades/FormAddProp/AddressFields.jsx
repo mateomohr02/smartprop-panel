@@ -1,8 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { validateAddPropertyForm } from "@/utils/validateAddPropertyForm";
 
-const AddressFields = ({ property, setProperty }) => {
+const AddressFields = ({
+  property,
+  setProperty,
+  errors,
+  setErrors,
+  hasTriedSubmit,
+}) => {
   const [street, setStreet] = useState("");
   const [number, setNumber] = useState("");
 
@@ -31,21 +38,65 @@ const AddressFields = ({ property, setProperty }) => {
     if (formattedAddress !== property.address) {
       setProperty((prev) => ({ ...prev, address: formattedAddress }));
     }
+
+    if (hasTriedSubmit) {
+      const validationErrors = validateAddPropertyForm({
+        ...property,
+        address: formattedAddress,
+      });
+      setErrors(validationErrors);
+    }
   }, [street, number]);
+
+  const handleStreetChange = (e) => {
+    setStreet(e.target.value);
+
+    if (hasTriedSubmit) {
+      const formattedAddress =
+        e.target.value.trim() && (number.trim() || "S/N")
+          ? `${e.target.value.trim()} ${number.trim() || "S/N"}`
+          : "";
+      const validationErrors = validateAddPropertyForm({
+        ...property,
+        address: formattedAddress,
+      });
+      setErrors(validationErrors);
+    }
+  };
+
+  const handleNumberChange = (e) => {
+    setNumber(e.target.value);
+
+    if (hasTriedSubmit) {
+      const formattedAddress =
+        street.trim() && (e.target.value.trim() || "S/N")
+          ? `${street.trim()} ${e.target.value.trim() || "S/N"}`
+          : "";
+      const validationErrors = validateAddPropertyForm({
+        ...property,
+        address: formattedAddress,
+      });
+      setErrors(validationErrors);
+    }
+  };
 
   const isDefault = number.trim() === "";
 
   return (
     <div className="flex gap-2 rounded-sm w-full">
       <div className="flex flex-col w-2/3 gap-1">
-        <label htmlFor="street">Calle</label>
+        <div className="flex justify-between items-baseline">
+          <label htmlFor="street">Calle</label>
+          <label htmlFor="streetError" className="text-red-500 text-sm">
+            {errors.address && errors.address}
+          </label>
+        </div>
         <input
           type="text"
           placeholder="Nombre de la Calle"
           className="p-2 bg-third rounded-sm drop-shadow-sm w-full"
           value={street}
-          onChange={(e) => setStreet(e.target.value)}
-          onInput={(e) => setStreet(e.target.value)}
+          onChange={handleStreetChange}
           autoComplete="new-street"
         />
       </div>
@@ -53,14 +104,13 @@ const AddressFields = ({ property, setProperty }) => {
       <div className="flex flex-col w-1/3 gap-1">
         <label htmlFor="number">Altura</label>
         <input
-          type="number"
+          type="text"
           name="number"
           id="number"
           className="p-2 bg-third rounded-sm drop-shadow-sm w-full text-center"
           placeholder={isDefault ? "S/N" : ""}
           value={isDefault ? "" : number}
-          onChange={(e) => setNumber(e.target.value)}
-          onInput={(e) => setNumber(e.target.value)}
+          onChange={handleNumberChange}
           autoComplete="new-number"
         />
       </div>

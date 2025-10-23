@@ -3,10 +3,16 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 import { normalizeText } from "@/helpers/normalizeText";
-
 import { useFetchCharacteristics } from "@/hooks/useFetchCharacteristics";
+import { validateAddPropertyForm } from "@/utils/validateAddPropertyForm";
 
-const CharacteristicField = ({ property, setProperty }) => {
+const CharacteristicField = ({
+  property,
+  setProperty,
+  errors,
+  setErrors,
+  hasTriedSubmit,
+}) => {
   const { characteristics, loading, error } = useFetchCharacteristics();
 
   const [inputValue, setInputValue] = useState("");
@@ -31,6 +37,14 @@ const CharacteristicField = ({ property, setProperty }) => {
     });
     setInputValue("");
     setSuggestionsVisible(false);
+
+    if (hasTriedSubmit) {
+      const validationErrors = validateAddPropertyForm({
+        ...property,
+        characteristics: [...selectedCharacteristics, characteristic],
+      });
+      setErrors(validationErrors);
+    }
   };
 
   const handleRemoveCharacteristic = (slug) => {
@@ -38,6 +52,14 @@ const CharacteristicField = ({ property, setProperty }) => {
       ...property,
       characteristics: selectedCharacteristics.filter((c) => c.slug !== slug),
     });
+
+    if (hasTriedSubmit) {
+      const validationErrors = validateAddPropertyForm({
+        ...property,
+        characteristics: selectedCharacteristics.filter((c) => c.slug !== slug),
+      });
+      setErrors(validationErrors);
+    }
   };
 
   const handleKeyDown = (e) => {
@@ -92,6 +114,12 @@ const CharacteristicField = ({ property, setProperty }) => {
           placeholder="Agregar..."
         />
       </div>
+
+      {errors.characteristics && (
+        <label htmlFor="characteristicsError" className="text-red-500 text-sm">
+          {errors.characteristics}
+        </label>
+      )}
 
       {suggestionsVisible &&
         inputValue.trim() !== "" &&

@@ -1,38 +1,76 @@
 "use client"
 
-const RoomsAndBedroomsFields = ({property, setProperty}) => {
+import { validateAddPropertyForm } from "@/utils/validateAddPropertyForm";
+
+const RoomsAndBedroomsFields = ({
+  property,
+  setProperty,
+  errors,
+  setErrors,
+  hasTriedSubmit,
+}) => {
+  const handleRoomsChange = (e) => {
+    setProperty({
+      ...property,
+      rooms: e.target.value,
+    });
+
+    if (hasTriedSubmit) {
+      const validationErrors = validateAddPropertyForm({
+        ...property,
+        rooms: e.target.value,
+      });
+      setErrors(validationErrors);
+    }
+  };
+
+  const handleBedroomsChange = (e) => {
+    setProperty({
+      ...property,
+      bedrooms: e.target.value,
+    });
+
+    if (hasTriedSubmit) {
+      const validationErrors = validateAddPropertyForm({
+        ...property,
+        bedrooms: e.target.value,
+      });
+      setErrors(validationErrors);
+    }
+  };
+
   return (
     <div className="flex gap-2 rounded-sm w-full">
-        <div className="flex flex-col flex-1 gap-1">
-          <label htmlFor="covered">Ambientes</label>
-          <input
-            type="text"
-            className="p-2 bg-third rounded-sm drop-shadow-sm w-full text-center"
-            value={property.rooms}
-            onChange={(e) =>
-              setProperty({
-                ...property,
-                rooms: e.target.value,
-              })
-            }
-          />
+      <div className="flex flex-col flex-1 gap-1">
+        <div className="flex justify-between items-baseline">
+          <label htmlFor="rooms">Ambientes</label>
+          <label htmlFor="roomsError" className="text-red-500 text-sm">
+            {errors.rooms && errors.rooms}
+          </label>
         </div>
-        <div className="flex flex-col flex-1 gap-1">
-          <label htmlFor="total">Dormitiorios</label>
-          <input
-            type="text"
-            className="p-2 bg-third rounded-sm drop-shadow-sm w-full text-center"
-            value={property.bedrooms}
-            onChange={(e) =>
-              setProperty({
-                ...property,
-                bedrooms: e.target.value,
-              })
-            }
-          />
-        </div>
+        <input
+          type="number"
+          className="p-2 bg-third rounded-sm drop-shadow-sm w-full text-center"
+          value={property.rooms}
+          onChange={handleRoomsChange}
+        />
       </div>
-  )
-}
+      <div className="flex flex-col flex-1 gap-1">
+        <div className="flex justify-between items-baseline">
+          <label htmlFor="bedrooms">Dormitorios</label>
+          <label htmlFor="bedroomsError" className="text-red-500 text-sm">
+            {errors.bedrooms && errors.bedrooms}
+          </label>
+        </div>
+        <input
+          type="number"
+          className="p-2 bg-third rounded-sm drop-shadow-sm w-full text-center"
+          value={property.bedrooms}
+          onChange={handleBedroomsChange}
+        />
+      </div>
+    </div>
+  );
+};
 
-export default RoomsAndBedroomsFields
+export default RoomsAndBedroomsFields;

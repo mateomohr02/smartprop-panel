@@ -3,36 +3,55 @@
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { useFetchPropertyTypes } from "@/hooks/useFetchPropertyTypes";
+import { validateAddPropertyForm } from "@/utils/validateAddPropertyForm";
 
-const PropertyTypeSelector = ({ property, setProperty }) => {
+const PropertyTypeSelector = ({
+  property,
+  setProperty,
+  errors,
+  setErrors,
+  hasTriedSubmit,
+}) => {
   const { propertyTypes, loading, error } = useFetchPropertyTypes();
 
-  // Estado interno del select
   const [selectedType, setSelectedType] = useState(
     property.propertyTypeSlug ? property.propertyTypeSlug : ""
   );
-  // Estado para "otro"
   const [customType, setCustomType] = useState("");
 
   const handleSelectChange = (e) => {
     const value = e.target.value;
     setSelectedType(value);
 
+    const updated = { ...property };
+
     if (value === "other") {
-      // No pisamos propertyType, solo dejamos vacío
-      setProperty({ ...property, propertyTypeSlug: "" });
-    } else {
+      updated.propertyTypeSlug = "";
       setCustomType("");
-      setProperty({ ...property, propertyTypeSlug: value });
+    } else {
+      updated.propertyTypeSlug = value;
+      setCustomType("");
+    }
+
+    setProperty(updated);
+
+    if (hasTriedSubmit) {
+      const validationErrors = validateAddPropertyForm(updated);
+      setErrors(validationErrors);
     }
   };
 
   const handleCustomTypeChange = (e) => {
     const value = e.target.value;
     setCustomType(value);
-    // Guardamos el valor personalizado en propertyType,
-    // pero SIN tocar el selectedType, que sigue siendo "other"
-    setProperty({ ...property, propertyTypeSlug: value });
+
+    const updated = { ...property, propertyTypeSlug: value };
+    setProperty(updated);
+
+    if (hasTriedSubmit) {
+      const validationErrors = validateAddPropertyForm(updated);
+      setErrors(validationErrors);
+    }
   };
 
   if (loading) {
@@ -53,7 +72,13 @@ const PropertyTypeSelector = ({ property, setProperty }) => {
 
   return (
     <div className="w-full flex flex-col gap-1">
-      <label htmlFor="propertyType">Tipo de Propiedad</label>
+      <div className="flex items-baseline justify-between">
+        <label htmlFor="propertyType">Tipo de Propiedad</label>
+        <label htmlFor="propertyTypeError" className="text-red-500 text-sm">
+          {errors.propertyTypeSlug && errors.propertyTypeSlug}
+        </label>
+      </div>
+
       <div className="w-full flex flex-col gap-2">
         <div className="relative w-full">
           <select
@@ -81,9 +106,17 @@ const PropertyTypeSelector = ({ property, setProperty }) => {
 
         {selectedType === "other" && (
           <div className="w-full">
-            <label htmlFor="otherPropertyType" className="text-sm">
-              Nuevo tipo de propiedad
-            </label>
+            <div className="flex items-baseline justify-between">
+              <label htmlFor="otherPropertyType" className="text-sm">
+                Nuevo tipo de propiedad
+              </label>
+              <label
+                htmlFor="otherPropertyTypeError"
+                className="text-red-500 text-sm"
+              >
+                {errors.propertyTypeSlug && errors.propertyTypeSlug}
+              </label>
+            </div>
             <input
               id="otherPropertyType"
               type="text"
