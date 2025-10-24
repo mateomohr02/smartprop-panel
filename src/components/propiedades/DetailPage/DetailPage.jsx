@@ -3,6 +3,7 @@
 import { useParams } from "next/navigation";
 
 import { useFetchPropertyDetail } from "@/hooks/useFetchPropertyDetail";
+import PropertyData from "./PropertyData";
 
 const DetailPage = () => {
 
@@ -10,11 +11,10 @@ const DetailPage = () => {
 
   const {property, loading, error} = useFetchPropertyDetail(propertyId);
 
-  console.log(property);
-  
-
   return (
-    <div>DetailPage</div>
+    <div className="w-full px-2 pt-1 pb-2 rounded-sm">
+      <PropertyData property={property?.data}/>
+    </div>
   )
 }
 
