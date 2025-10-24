@@ -4,7 +4,7 @@ export const fetchPropertyDetail = async (propertyId, token, tenantId) => {
     
 
     const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/properties/${propertyId}`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/properties/detail/${propertyId}`,
     {
       method: "GET",
       headers: {
