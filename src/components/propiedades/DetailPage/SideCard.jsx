@@ -4,8 +4,13 @@ import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import ToggleButtonDetailCard from "./ToggleButtonDetailCard";
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const SideCard = ({ property }) => {
+
+  const pathname = usePathname();
+
   const imgArray = property?.multimedia?.images || [];
   const [count, setCount] = useState(0);
 
@@ -102,9 +107,9 @@ const SideCard = ({ property }) => {
           <span>{displayProperty?.reach}</span>
         </div>
 
-        <button className="w-full py-2 bg-primary text-contrast hover:bg-secondary rounded-sm text transition-all duration-300 cursor-pointer">
+        <Link href={`${pathname}/editar`} className="w-full py-2 bg-primary text-contrast hover:bg-secondary rounded-sm text transition-all duration-300 cursor-pointer">
           Editar Información
-        </button>
+        </Link>
       </div>
     </div>
   );

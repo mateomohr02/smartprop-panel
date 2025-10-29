@@ -6,7 +6,7 @@ const MainCard = ({ property }) => {
   console.log(property);
 
   return (
-    <div>
+    <div className="w-full flex flex-col px-4 pb-2 gap-3">
       <p>Título: {property?.title}</p>
       <p>Descripción: {property?.description}</p>
       <p>
