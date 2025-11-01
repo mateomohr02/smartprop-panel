@@ -18,7 +18,7 @@ export function useFetchMetrics() {
         }
 
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/dashboard/metrics`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/metrics/dashboard`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -33,7 +33,8 @@ export function useFetchMetrics() {
         }
 
         const data = await res.json();
-        setMetrics(data.data);
+
+        setMetrics(data.metrics);
       } catch (err) {
         console.error("Error al obtener métricas:", err);
         setError(err.message);

@@ -17,7 +17,7 @@ export function useFetchLeads() {
           throw new Error("Token o Tenant ID no encontrados en localStorage");
         }
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/dashboard/leads`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/leads`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -33,7 +33,7 @@ export function useFetchLeads() {
 
         const data = await res.json();
 
-        setLeads(data.data);
+        setLeads(data.leads);
       } catch (err) {
         console.error("Error al obtener métricas:", err);
         setError(err.message);
