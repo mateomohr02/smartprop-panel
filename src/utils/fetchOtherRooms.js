@@ -1,6 +1,6 @@
 export const fetchOtherRooms = async (token, tenantId) => {
     const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/properties/rooms`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/rooms`,
     {
       method: "GET",
       headers: {
@@ -12,8 +12,9 @@ export const fetchOtherRooms = async (token, tenantId) => {
   );
 
   if (response.ok) {
-    const data = await response.json();
-    return data;
+    const data = await response.json();    
+
+    return data.rooms;
   } else {
     throw new Error("Failed to fetch other rooms");
   }

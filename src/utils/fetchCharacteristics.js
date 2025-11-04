@@ -1,6 +1,6 @@
 export const fetchCharacteristics = async (token, tenantId) => {
     const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/properties/characteristics`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/characteristics`,
     {
       method: "GET",
       headers: {
@@ -13,9 +13,11 @@ export const fetchCharacteristics = async (token, tenantId) => {
 
   if (response.ok) {
     const data = await response.json();
-    return data;
+
+    return data.characteristics;
+
   } else {
-    throw new Error("Failed to fetch comodities");
+    throw new Error("Failed to fetch characteristics");
   }
 
 }

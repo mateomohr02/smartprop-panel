@@ -19,7 +19,7 @@ export function useFetchComodities() {
         }
 
         const response = await fetchComodities(token, tenantId);
-        setComodities(response.data);
+        setComodities(response);
         setError(null);
       } catch (err) {
         console.error("Error al obtener comodities:", err);
@@ -31,6 +31,9 @@ export function useFetchComodities() {
 
     fetch();
   }, []);
+
+  console.log(comodities);
+  
 
   return { comodities, loading, error };
 }

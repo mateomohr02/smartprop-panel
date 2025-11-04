@@ -20,7 +20,7 @@ export function useFetchOtherRooms() {
         }
 
         const response = await fetchOtherRooms(token, tenantId);
-        setRooms(response.data);
+        setRooms(response);
         setError(null);
       } catch (err) {
         console.error("Error al obtener tipos de ambientes:", err);
@@ -31,7 +31,7 @@ export function useFetchOtherRooms() {
     };
 
     fetch();
-  }, []);
+  }, []);  
 
   return { rooms, loading, error };
 }

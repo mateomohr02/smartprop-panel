@@ -1,7 +1,7 @@
 // utils/fetchAvailableLocations.js
 export default async function fetchAvailableLocations(fatherLocation, token, tenantId) {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/locations`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/places`,
     {
       method: "POST",
       headers: {
@@ -19,5 +19,6 @@ export default async function fetchAvailableLocations(fatherLocation, token, ten
   }
 
   const data = await response.json();
-  return data.data || data;
+
+  return data.locations;
 }

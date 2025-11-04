@@ -19,7 +19,7 @@ export function useFetchCharacteristics() {
         }
 
         const response = await fetchCharacteristics(token, tenantId);
-        setCharacteristics(response.data);
+        setCharacteristics(response);
         setError(null);
       } catch (err) {
         console.error("Error al obtener características:", err);

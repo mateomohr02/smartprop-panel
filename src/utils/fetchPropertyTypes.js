@@ -15,6 +15,7 @@ export const fetchPropertyTypes = async (token, tenantId) => {
     throw new Error(`Error al obtener la consulta: ${errorText}`);
   } 
 
-  const data = await response.json();
-  return data.data || data;
+  const data = await response.json();  
+
+  return data.propertyTypes || data;
 };
