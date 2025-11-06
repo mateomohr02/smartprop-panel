@@ -1,78 +1,92 @@
+"use client";
+
+import React from "react";
 import { ChevronDown } from "lucide-react";
 import { validateAddPropertyForm } from "@/utils/validateAddPropertyForm";
 
-const AgeAndAvailability = ({
-  property,
-  setProperty,
-  errors,
-  setErrors,
-  hasTriedSubmit,
-}) => {
+const AgeAndAvailability = ({ property, setProperty, errors, setErrors, hasTriedSubmit }) => {
   const availableOptions = [
     { display: "Inmediata", value: "inmediate" },
     { display: "A partir de:", value: "date" },
   ];
 
-  const handleAvailabilityChange = (e) => {
-    const value = e.target.value;
-    setProperty({
-      ...property,
-      availabilityType: value,
-      availabilityDate:
-        value === "date" ? property.availabilityDate || "" : null,
-    });
-
-    if (hasTriedSubmit) {
-      const validationErrors = validateAddPropertyForm({
-        ...property,
-        availabilityType: value,
-        availabilityDate:
-          value === "date" ? property.availabilityDate || "" : null,
-      });
-      setErrors(validationErrors);
-    }
-  };
-
+  // --- Cambiar antigüedad ---
   const handleAgeChange = (e) => {
-    setProperty({ ...property, age: e.target.value });
+    const newAge = e.target.value;
+    const updated = {
+      ...property,
+      data: {
+        ...property.data,
+        age: newAge,
+      },
+    };
+    setProperty(updated);
 
     if (hasTriedSubmit) {
-      const validationErrors = validateAddPropertyForm({
-        ...property,
-        age: e.target.value,
-      });
+      const validationErrors = validateAddPropertyForm(updated);
       setErrors(validationErrors);
     }
   };
 
-  const handleAvailabilityDateChange = (e) => {
-    setProperty({ ...property, availabilityDate: e.target.value });
+  // --- Cambiar tipo de disponibilidad ---
+  const handleAvailabilityChange = (e) => {
+    const newType = e.target.value;
+    const updated = {
+      ...property,
+      data: {
+        ...property.data,
+        availability: {
+          type: newType,
+          date: newType === "date" ? property.data.availability.date || "" : null,
+        },
+      },
+    };
+    setProperty(updated);
 
     if (hasTriedSubmit) {
-      const validationErrors = validateAddPropertyForm({
-        ...property,
-        availabilityDate: e.target.value,
-      });
+      const validationErrors = validateAddPropertyForm(updated);
+      setErrors(validationErrors);
+    }
+  };
+
+  // --- Cambiar fecha de disponibilidad ---
+  const handleAvailabilityDateChange = (e) => {
+    const newDate = e.target.value;
+    const updated = {
+      ...property,
+      data: {
+        ...property.data,
+        availability: {
+          ...property.data.availability,
+          date: newDate,
+        },
+      },
+    };
+    setProperty(updated);
+
+    if (hasTriedSubmit) {
+      const validationErrors = validateAddPropertyForm(updated);
       setErrors(validationErrors);
     }
   };
 
   return (
     <div className="w-full flex flex-col gap-2">
-      <div className="flex flex-row gap-2 ">
+      <div className="flex flex-row gap-2">
         {/* Antigüedad */}
         <div className="w-1/2 flex flex-col gap-1">
           <div className="flex justify-between items-baseline">
             <label htmlFor="age">Antigüedad</label>
-            <label htmlFor="ageError" className="text-red-500 text-sm">
-              {errors.age && errors.age}
-            </label>
+            <span className="text-red-500 text-sm">
+              {errors?.data?.age && errors?.data?.age}
+            </span>
           </div>
           <input
+            id="age"
             type="number"
             placeholder="Ingrese los años"
             className="p-2 rounded-sm w-full shadow-sm bg-third"
-            value={property.age || ""}
+            value={property.data.age || ""}
             onChange={handleAgeChange}
           />
         </div>
@@ -80,16 +94,17 @@ const AgeAndAvailability = ({
         {/* Disponibilidad */}
         <div className="w-1/2 flex flex-col gap-1">
           <div className="flex justify-between items-baseline">
-            <label htmlFor="availabilityType">Disponibilidad</label>
-            <label htmlFor="availabilityTypeError" className="text-red-500 text-sm">
-              {errors.availabilityType && errors.availabilityType}
-            </label>
+            <label htmlFor="availability">Disponibilidad</label>
+            <span className="text-red-500 text-sm">
+             {errors?.data?.availability && errors?.data?.availability}
+            </span>
           </div>
 
           <div className="relative w-full">
             <select
-              name="availabilityType"
-              value={property.availabilityType || ""}
+              id="availability"
+              name="availability"
+              value={property.data.availability.type}
               className="appearance-none w-full p-2 rounded-sm px-3 pr-10 bg-third drop-shadow-sm"
               onChange={handleAvailabilityChange}
             >
@@ -97,12 +112,11 @@ const AgeAndAvailability = ({
                 Seleccione la Disponibilidad
               </option>
               {availableOptions.map((o) => (
-                <option key={`${o.value}-Option`} value={o.value}>
+                <option key={o.value} value={o.value}>
                   {o.display}
                 </option>
               ))}
             </select>
-
             <ChevronDown
               className="absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none"
               size={18}
@@ -110,25 +124,25 @@ const AgeAndAvailability = ({
           </div>
         </div>
       </div>
-      <div className="w-full">
-        {/* Mostrar selector de fecha solo si availabilityType es "date" */}
-        {property.availabilityType === "date" && (
-          <div className="flex flex-col gap-1">
-            <div className="flex justify-between items-baseline">
-              <label htmlFor="availabilityDate">Fecha de Disponibilidad</label>
-              <label htmlFor="availabilityDateError" className="text-red-500 text-sm">
-                {errors.availabilityDate && errors.availabilityDate}
-              </label>
-            </div>
-            <input
-              type="date"
-              className="p-2 rounded-sm w-full shadow-sm bg-third mt-2"
-              value={property.availabilityDate || ""}
-              onChange={handleAvailabilityDateChange}
-            />
+
+      {/* Fecha de disponibilidad */}
+      {property.data.availability.type === "date" && (
+        <div className="w-full flex flex-col gap-1 mt-2">
+          <div className="flex justify-between items-baseline">
+            <label htmlFor="availabilityDate">Fecha de Disponibilidad</label>
+            <span className="text-red-500 text-sm">
+              {errors.data.availabilityDate && errors.data.availabilityDate}
+            </span>
           </div>
-        )}
-      </div>
+          <input
+            id="availabilityDate"
+            type="date"
+            className="p-2 rounded-sm w-full shadow-sm bg-third"
+            value={property.data.availability.date || ""}
+            onChange={handleAvailabilityDateChange}
+          />
+        </div>
+      )}
     </div>
   );
 };

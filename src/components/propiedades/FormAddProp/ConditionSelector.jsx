@@ -17,36 +17,39 @@ const ConditionSelector = ({
     { display: "A Renovar", slug: "to-renovate" },
   ];
 
+  const handleChange = (e) => {
+    const selected = availableConditions.find((c) => c.slug === e.target.value);
+
+    const updated = {
+      ...property,
+      data: {
+        ...property.data,
+        condition: selected.slug,
+      },
+    };
+
+    setProperty(updated);
+
+    if (hasTriedSubmit) {
+      const validationErrors = validateAddPropertyForm(updated);
+      setErrors(validationErrors);
+    }
+  };  
+
   return (
     <div className="flex flex-col gap-1 w-full">
       <div className="flex justify-between items-baseline">
         <label htmlFor="condition">Condición</label>
         <label htmlFor="errorCondition" className="text-red-500 text-sm">
-          {errors.condition && errors.condition}
+         {errors?.data?.condition && errors?.data?.condition}
         </label>
       </div>
       <div className="relative w-full">
         <select
           id="condition"
           name="condition"
-          value={property.condition || ""}
-          onChange={(e) => {
-            const selected = availableConditions.find(
-              (c) => c.slug === e.target.value
-            );
-            setProperty({
-              ...property,
-              condition: selected.slug,
-            });
-
-            if (hasTriedSubmit) {
-              const validationErrors = validateAddPropertyForm({
-                ...property,
-                condition: selected.slug,
-              });
-              setErrors(validationErrors);
-            }
-          }}
+          value={property?.data?.condition || ""}
+          onChange={handleChange}
           className="appearance-none w-full p-2 rounded-sm px-3 pr-10 bg-third drop-shadow-sm"
         >
           <option value="" disabled>

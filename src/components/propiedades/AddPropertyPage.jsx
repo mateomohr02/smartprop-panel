@@ -1,63 +1,55 @@
-"use client"
+"use client";
 
-import { useState } from "react"
+import { useState } from "react";
 
-import FormAddProperty from "./FormAddProp/FormAddProperty"
+import FormAddProperty from "./FormAddProp/FormAddProperty";
 
 const AddPropertyPage = () => {
-
-    const [newProperty, setNewProperty] = useState({
-        title:"",
-        propertyTypeSlug:"",
-        description:"",
-        operation:"",
-        price:"",
-        priceFIAT:null,
-        expenses:"",
-        expensesFIAT:null,
-        financing:"Consultar",
-        multimedia:{
-            images:[],
-            video:[]
-        },
-        surface:{
-            covered:"",
-            total:""
-        },
-        services:{
-            light:true,
-            water:true,
-            gas:true
-        },
-        condition:null,
-        age:"",
-        availabilityType:"inmediate",
-        availabilityDate: null,
-        rooms:"",
-        bedrooms:"",
-        bathrooms:"",
-        garages:"",
-        address:"",
-        place:{
-            countryInput:"",
-            provinceInput:"",
-            cityInput:"",
-            neighborhoodInput:""
-        },
-        mapLocation:{
-            lat:"",
-            lng:""
-        },
-        otherRooms:[],
-        comodities:[],
-        characteristics:[]
-    })
+  const [newProperty, setNewProperty] = useState({
+    initialData: {
+      title: null,
+      description: null,
+      propertyType: null,
+    },
+    data: {
+      price: { currency: "USD", value: null },
+      expenses: null,
+      financing: "Consultar",
+      rooms: null,
+      bedrooms: null,
+      bathrooms: null,
+      garages: null,
+      surface: {
+        covered: null,
+        total: null,
+      },
+      services: {
+        light: true,
+        water: true,
+        gas: true,
+      },
+      condition: null,
+      age: null,
+      availability: { type: "inmediate", date: null },
+    },
+    location: {
+        country:null,
+        province:null,
+        city:null,
+        neighborhood:null,
+        address:null
+    },
+    multimedia: {images:[], videos:[]},
+    comodities: [],
+    characteristics: [],
+    rooms: [],
+  });
 
   return (
     <div className="p-2">
-        <FormAddProperty property={newProperty} setProperty={setNewProperty}/>
+      <FormAddProperty property={newProperty} setProperty={setNewProperty} />
     </div>
-  )
-}
+  );
+};
 
-export default AddPropertyPage
+export default AddPropertyPage;

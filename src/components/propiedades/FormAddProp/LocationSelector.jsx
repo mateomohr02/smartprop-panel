@@ -2,8 +2,8 @@
 import { useState, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 
-const LocationSelector = ({ label, level, data, selected, onSelect }) => {
-  const { locations, loading, error } = data;
+const LocationSelector = ({ label, level, data, selected, onSelect, error }) => {
+  const { locations, loading, error: fetchError } = data;
   const [selectedValue, setSelectedValue] = useState(selected || "");
   const [customValue, setCustomValue] = useState("");
 
@@ -41,10 +41,10 @@ const LocationSelector = ({ label, level, data, selected, onSelect }) => {
     );
   }
 
-  if (error) {
+  if (fetchError) {
     return (
       <div className="w-full py-2 px-3 border-2 border-red-400 rounded-lg bg-red-50 text-red-600">
-        Error al cargar {label.toLowerCase()}s: {error}
+        Error al cargar {label.toLowerCase()}s: {fetchError}
       </div>
     );
   }
@@ -55,9 +55,11 @@ const LocationSelector = ({ label, level, data, selected, onSelect }) => {
       <div className="relative w-full">
         <select
           name={level}
-          value={selectedValue}
+          value={selectedValue?.slug || selectedValue || ""}
           onChange={handleSelectChange}
-          className="appearance-none w-full p-2 drop-shadow-sm rounded-sm px-3 pr-10 bg-third"
+          className={`appearance-none w-full p-2 drop-shadow-sm rounded-sm px-3 pr-10 bg-third ${
+            error ? "border border-red-400" : ""
+          }`}
         >
           <option value="" disabled>
             Seleccione {label.toLowerCase()}
@@ -77,16 +79,18 @@ const LocationSelector = ({ label, level, data, selected, onSelect }) => {
       </div>
 
       {selectedValue === "other" && (
-        <div className="w-full">
-          <input
-            type="text"
-            className="w-full mt-2 p-2 drop-shadow-sm rounded-sm px-3 bg-third"
-            placeholder={`Ingrese ${label.toLowerCase()}`}
-            value={customValue}
-            onChange={handleCustomChange}
-          />
-        </div>
+        <input
+          type="text"
+          className={`w-full mt-2 p-2 drop-shadow-sm rounded-sm px-3 bg-third ${
+            error ? "border border-red-400" : ""
+          }`}
+          placeholder={`Ingrese ${label.toLowerCase()}`}
+          value={customValue}
+          onChange={handleCustomChange}
+        />
       )}
+
+      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
     </div>
   );
 };

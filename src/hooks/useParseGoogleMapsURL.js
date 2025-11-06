@@ -21,6 +21,9 @@ export function useParseGoogleMapsURL(url) {
         if (!token || !tenantId) throw new Error("Token o Tenant ID no encontrado");
 
         const parsed = await parseGoogleMapsUrl(url, token, tenantId);
+
+        console.log(parsed);
+        
         setLocation(parsed);
       } catch (err) {
         console.error(err);

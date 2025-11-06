@@ -17,8 +17,8 @@ L.Icon.Default.mergeOptions({
 });
 
 const MapPreviewContent = ({ property }) => {
-  const lat = property?.mapLocation?.lat;
-  const lng = property?.mapLocation?.lng;
+  const lat = property?.location.mapLocation?.lat;
+  const lng = property?.location.mapLocation?.lng;
 
   useEffect(() => {
     if (!lat || !lng) {
@@ -47,7 +47,7 @@ const MapPreviewContent = ({ property }) => {
         />
         <Marker position={[lat, lng]}>
           <Popup>
-            {property?.title || "Aquí está la propiedad"}
+            {property?.initialData.title || "Aquí está la propiedad"}
           </Popup>
         </Marker>
       </MapContainer>

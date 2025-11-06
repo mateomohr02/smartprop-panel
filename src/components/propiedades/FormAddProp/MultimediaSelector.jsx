@@ -17,8 +17,8 @@ const MultimediaField = ({ property, setProperty, errors, setErrors, hasTriedSub
     const updated = {
       ...property,
       multimedia: {
-        images: [...property.multimedia.images, ...images],
-        video: [...property.multimedia.video, ...videos],
+        images: [...(property.multimedia.images || []), ...images],
+        videos: [...(property.multimedia.videos || []), ...videos],
       },
     };
 
@@ -35,7 +35,7 @@ const MultimediaField = ({ property, setProperty, errors, setErrors, hasTriedSub
       ...property,
       multimedia: {
         images: property.multimedia.images.filter((f) => f.name !== fileName),
-        video: property.multimedia.video.filter((f) => f.name !== fileName),
+        videos: property.multimedia.videos.filter((f) => f.name !== fileName),
       },
     };
 
@@ -51,8 +51,8 @@ const MultimediaField = ({ property, setProperty, errors, setErrors, hasTriedSub
   const triggerCameraInput = () => cameraInputRef.current.click();
 
   const allFiles = [
-    ...property.multimedia.images,
-    ...property.multimedia.video,
+    ...(property.multimedia.images || []),
+    ...(property.multimedia.videos || []),
   ];
 
   return (
@@ -60,7 +60,7 @@ const MultimediaField = ({ property, setProperty, errors, setErrors, hasTriedSub
       <div className="flex justify-between items-baseline">
         <label htmlFor="multimedia">Multimedia</label>
         <label htmlFor="multimediaError" className="text-red-500 text-sm">
-          {errors["multimedia.images"] && errors["multimedia.images"]}
+          {errors?.multimedia?.images && errors?.multimedia?.images}
         </label>
       </div>
 

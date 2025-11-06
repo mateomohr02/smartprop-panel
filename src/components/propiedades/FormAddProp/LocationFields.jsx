@@ -21,127 +21,115 @@ const LocationFields = ({
   const citiesFetch = useFetchLocations(province);
   const neighborhoodsFetch = useFetchLocations(city);
 
+  const updateAndValidate = (updated) => {
+    setProperty(updated);
+    if (hasTriedSubmit) {
+      setErrors(validateAddPropertyForm(updated));
+    }
+  };
+
   const handleCountryChange = (val) => {
     const withType = val ? { ...val, type: "country" } : null;
     setCountry(withType);
     setProvince(null);
     setCity(null);
-    setProperty({
-      ...property,
-      place: {
-        countryInput: val?.slug || val?.name || val || "",
-        provinceInput: "",
-        cityInput: "",
-        neighborhoodInput: "",
-      },
-    });
 
-    if (hasTriedSubmit) {
-      const validationErrors = validateAddPropertyForm({
-        ...property,
-        place: {
-          countryInput: val?.slug || val?.name || val || "",
-          provinceInput: "",
-          cityInput: "",
-          neighborhoodInput: "",
-        },
-      });
-      setErrors(validationErrors);
-    }
+    const updated = {
+      ...property,
+      location: {
+        country: val
+          ? { exists: !!val.id, value: val.id || val.name || val }
+          : null,
+        province: null,
+        city: null,
+        neighborhood: null,
+      },
+    };
+
+    updateAndValidate(updated);
   };
 
   const handleProvinceChange = (val) => {
     const withType = val ? { ...val, type: "province" } : null;
     setProvince(withType);
     setCity(null);
-    setProperty({
-      ...property,
-      place: {
-        ...property.place,
-        provinceInput: val?.slug || val?.name || val || "",
-        cityInput: "",
-        neighborhoodInput: "",
-      },
-    });
 
-    if (hasTriedSubmit) {
-      const validationErrors = validateAddPropertyForm({
-        ...property,
-        place: {
-          ...property.place,
-          provinceInput: val?.slug || val?.name || val || "",
-          cityInput: "",
-          neighborhoodInput: "",
-        },
-      });
-      setErrors(validationErrors);
-    }
+    const updated = {
+      ...property,
+      location: {
+        ...property.location,
+        province: val
+          ? { exists: !!val.id, value: val.id || val.name || val }
+          : null,
+        city: null,
+        neighborhood: null,
+      },
+    };
+
+    updateAndValidate(updated);
   };
 
   const handleCityChange = (val) => {
     const withType = val ? { ...val, type: "city" } : null;
     setCity(withType);
-    setProperty({
-      ...property,
-      place: {
-        ...property.place,
-        cityInput: val?.slug || val?.name || val || "",
-        neighborhoodInput: "",
-      },
-    });
 
-    if (hasTriedSubmit) {
-      const validationErrors = validateAddPropertyForm({
-        ...property,
-        place: {
-          ...property.place,
-          cityInput: val?.slug || val?.name || val || "",
-          neighborhoodInput: "",
-        },
-      });
-      setErrors(validationErrors);
-    }
+    const updated = {
+      ...property,
+      location: {
+        ...property.location,
+        city: val
+          ? { exists: !!val.id, value: val.id || val.name || val }
+          : null,
+        neighborhood: null,
+      },
+    };
+
+    updateAndValidate(updated);
   };
 
   const handleNeighborhoodChange = (val) => {
-    setProperty({
+    const updated = {
       ...property,
-      place: {
-        ...property.place,
-        neighborhoodInput: val?.slug || val?.name || val || "",
+      location: {
+        ...property.location,
+        neighborhood: val
+          ? { exists: !!val.id, value: val.id || val.name || val }
+          : null,
       },
-    });
+    };
 
-    if (hasTriedSubmit) {
-      const validationErrors = validateAddPropertyForm({
-        ...property,
-        place: {
-          ...property.place,
-          neighborhoodInput: val?.slug || val?.name || val || "",
-        },
-      });
-      setErrors(validationErrors);
-    }
+    updateAndValidate(updated);
   };
 
   return (
     <div className="w-full flex flex-col gap-1">
+      <div className="flex flex-row justify-between items-baseline">
       <label>Ubicación</label>
+      {(errors?.location?.country ||
+        errors?.location?.province ||
+        errors?.location?.city ||
+        errors?.location?.neighborhood) && (
+        <label htmlFor="locationError" className="text-red-500 text-sm">
+          {errors?.location?.country ||
+            errors?.location?.province ||
+            errors?.location?.city ||
+            errors?.location?.neighborhood}
+        </label>
+      )}
+      </div>
 
       <div className="border border-gray-200 px-2 pb-2 py-1 flex flex-col gap-2 rounded-sm bg-contrast">
-        {/* Country */}
+        {/* País */}
         <LocationSelector
           label="País"
           level="country"
           data={countriesFetch}
           selected={country}
           onSelect={handleCountryChange}
-          property={property}
-          setProperty={setProperty}
-          error={errors.place?.countryInput}
+          error={errors["location.country"]}
         />
 
-        {/* Province */}
+        {/* Provincia */}
         {country && (
           <LocationSelector
             label="Provincia"
@@ -149,13 +137,11 @@ const LocationFields = ({
             data={provincesFetch}
             selected={province}
             onSelect={handleProvinceChange}
-            property={property}
-            setProperty={setProperty}
-            error={errors.place?.provinceInput}
+            error={errors["location.province"]}
           />
         )}
 
-        {/* City */}
+        {/* Ciudad */}
         {province && (
           <LocationSelector
             label="Ciudad"
@@ -163,37 +149,24 @@ const LocationFields = ({
             data={citiesFetch}
             selected={city}
             onSelect={handleCityChange}
-            property={property}
-            setProperty={setProperty}
-            error={errors.place?.cityInput}
+            error={errors["location.city"]}
           />
         )}
 
-        {/* Neighborhood */}
+        {/* Barrio */}
         {city && (
           <LocationSelector
             label="Barrio"
             level="neighborhood"
             data={neighborhoodsFetch}
-            selected={property.place?.neighborhoodInput || ""}
+            selected={property.location?.neighborhood || ""}
             onSelect={handleNeighborhoodChange}
-            property={property}
-            setProperty={setProperty}
-            error={errors.place?.neighborhoodInput}
+            error={errors["location.neighborhood"]}
           />
         )}
       </div>
-      {(errors["place.countryInput"] ||
-        errors["place.provinceInput"] ||
-        errors["place.cityInput"] ||
-        errors["place.neighborhoodInput"]) && (
-        <label htmlFor="locationError" className="text-red-500 text-sm">
-          {errors["place.countryInput"] ||
-            errors["place.provinceInput"] ||
-            errors["place.cityInput"] ||
-            errors["place.neighborhoodInput"]}
-        </label>
-      )}
+
+      
     </div>
   );
 };

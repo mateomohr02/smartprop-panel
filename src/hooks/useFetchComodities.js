@@ -32,8 +32,5 @@ export function useFetchComodities() {
     fetch();
   }, []);
 
-  console.log(comodities);
-  
-
   return { comodities, loading, error };
 }

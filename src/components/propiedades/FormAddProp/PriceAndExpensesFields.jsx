@@ -13,7 +13,14 @@ const PriceAndExpensesFields = ({
   const availableFIAT = ["USD", "ARS"];
 
   const handleChange = (field, value) => {
-    const updated = { ...property, [field]: value };
+    const updated = {
+      ...property,
+      data: {
+        ...property.data,
+        ...field, // merge del objeto con el cambio correspondiente
+      },
+    };
+
     setProperty(updated);
 
     if (hasTriedSubmit) {
@@ -30,15 +37,19 @@ const PriceAndExpensesFields = ({
           <div className="flex justify-between items-baseline">
             <label htmlFor="price">Precio</label>
             <label htmlFor="priceError" className="text-red-500 text-sm">
-              {errors.price && errors.price}
+              {errors?.data?.price && errors.data.price}
             </label>
           </div>
           <input
             type="number"
             placeholder="Ingrese el Valor"
             className="p-2 rounded-sm w-full shadow-sm bg-third"
-            value={property.price}
-            onChange={(e) => handleChange("price", e.target.value)}
+            value={property.data.price.value || ""}
+            onChange={(e) =>
+              handleChange({
+                price: { ...property.data.price, value: e.target.value },
+              })
+            }
           />
         </div>
 
@@ -46,16 +57,20 @@ const PriceAndExpensesFields = ({
           <div className="flex justify-between items-baseline">
             <label htmlFor="priceFIAT">Divisa</label>
             <label htmlFor="priceFIATError" className="text-red-500 text-sm">
-              {errors.priceFIAT && errors.priceFIAT}
+              {errors?.data?.priceCurrency && errors?.data?.priceCurrency}
             </label>
           </div>
           <div className="relative w-full">
             <select
               id="priceFIAT"
               name="priceFIAT"
-              value={property.priceFIAT || ""}
+              value={property.data.price.currency || ""}
               className="appearance-none w-full p-2 rounded-sm px-3 pr-10 bg-third drop-shadow-sm"
-              onChange={(e) => handleChange("priceFIAT", e.target.value)}
+              onChange={(e) =>
+                handleChange({
+                  price: { ...property.data.price, currency: e.target.value },
+                })
+              }
             >
               <option value="" disabled>
                 Seleccione la Divisa
@@ -81,15 +96,15 @@ const PriceAndExpensesFields = ({
           <div className="flex justify-between items-baseline">
             <label htmlFor="expenses">Expensas</label>
             <label htmlFor="expensesError" className="text-red-500 text-sm">
-              {errors.expenses && errors.expenses}
+              {errors?.data?.expenses && errors.data.expenses}
             </label>
           </div>
           <input
             type="number"
             placeholder="Ingrese el Valor"
             className="p-2 rounded-sm w-full shadow-sm bg-third"
-            value={property.expenses}
-            onChange={(e) => handleChange("expenses", e.target.value)}
+            value={property.data.expenses || ""}
+            onChange={(e) => handleChange({ expenses: e.target.value })}
           />
         </div>
 
@@ -97,7 +112,7 @@ const PriceAndExpensesFields = ({
           <div className="flex justify-between items-baseline">
             <label htmlFor="expensesFIAT">Divisa</label>
             <label htmlFor="expensesFIATError" className="text-red-500 text-sm">
-              {errors.expensesFIAT && errors.expensesFIAT}
+              {errors?.data?.expensesFIAT && errors.data.expensesFIAT}
             </label>
           </div>
 
@@ -105,9 +120,9 @@ const PriceAndExpensesFields = ({
             <select
               id="expensesFIAT"
               name="expensesFIAT"
-              value={property.expensesFIAT || ""}
+              value={property.data.expensesFIAT || ""}
               className="appearance-none w-full p-2 rounded-sm px-3 pr-10 bg-third drop-shadow-sm"
-              onChange={(e) => handleChange("expensesFIAT", e.target.value)}
+              onChange={(e) => handleChange({ expensesFIAT: e.target.value })}
             >
               <option value="" disabled>
                 Seleccione la Divisa

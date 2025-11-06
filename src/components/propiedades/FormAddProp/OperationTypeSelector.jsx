@@ -18,7 +18,15 @@ const OperationTypeSelector = ({
 
   const handleChange = (e) => {
     const value = e.target.value;
-    const updated = { ...property, operation: value };
+
+    const updated = {
+      ...property,
+      data: {
+        ...property.data,
+        operation: value, // 👈 ahora dentro de data
+      },
+    };
+
     setProperty(updated);
 
     if (hasTriedSubmit) {
@@ -32,7 +40,7 @@ const OperationTypeSelector = ({
       <div className="flex items-baseline justify-between">
         <label htmlFor="operation">Operación</label>
         <label htmlFor="operationError" className="text-red-500 text-sm">
-          {errors.operation && errors.operation}
+          {errors?.data?.operation && errors.data.operation}
         </label>
       </div>
 
@@ -40,7 +48,7 @@ const OperationTypeSelector = ({
         <select
           name="operation"
           id="operation"
-          value={property.operation || ""}
+          value={property.data.operation || ""}
           className="appearance-none w-full p-2 rounded-sm px-3 pr-10 bg-third drop-shadow-sm"
           onChange={handleChange}
         >

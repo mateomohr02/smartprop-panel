@@ -13,87 +13,75 @@ const AddressFields = ({
   const [street, setStreet] = useState("");
   const [number, setNumber] = useState("");
 
-  // Si property.address ya tiene valor (por ejemplo al editar)
+  // Inicializar si ya hay dirección (modo edición)
   useEffect(() => {
-    if (property.address && (!street && !number)) {
-      const parts = property.address.trim().split(" ");
+    const existingAddress = property?.location?.address;
+    if (existingAddress && !street && !number) {
+      const parts = existingAddress.trim().split(" ");
       const possibleNumber = parts.pop();
       const possibleStreet = parts.join(" ");
-
-      setStreet(possibleStreet);
+      setStreet(possibleStreet || "");
       if (possibleNumber && possibleNumber !== "S/N") {
         setNumber(possibleNumber);
       }
     }
-  }, [property.address]);
+  }, [property?.location?.address]);
 
-  // Actualizar property.address cada vez que cambian calle o altura
-  useEffect(() => {
+  // 🧠 Helper para construir y actualizar dirección
+  const updateAddress = (newStreet = street, newNumber = number) => {
     const formattedAddress =
-      street.trim() && (number.trim() || "S/N")
-        ? `${street.trim()} ${number.trim() || "S/N"}`
+      newStreet.trim() && (newNumber.trim() || "S/N")
+        ? `${newStreet.trim()} ${newNumber.trim() || "S/N"}`
         : "";
 
-    // Evitar actualizar si el valor no cambió
-    if (formattedAddress !== property.address) {
-      setProperty((prev) => ({ ...prev, address: formattedAddress }));
-    }
+    setProperty((prev) => ({
+      ...prev,
+      location: {
+        ...prev.location,
+        address: formattedAddress || null, // ✅ aseguro que se guarde en location
+      },
+    }));
 
     if (hasTriedSubmit) {
       const validationErrors = validateAddPropertyForm({
         ...property,
-        address: formattedAddress,
-      });
-      setErrors(validationErrors);
-    }
-  }, [street, number]);
-
-  const handleStreetChange = (e) => {
-    setStreet(e.target.value);
-
-    if (hasTriedSubmit) {
-      const formattedAddress =
-        e.target.value.trim() && (number.trim() || "S/N")
-          ? `${e.target.value.trim()} ${number.trim() || "S/N"}`
-          : "";
-      const validationErrors = validateAddPropertyForm({
-        ...property,
-        address: formattedAddress,
+        location: {
+          ...property.location,
+          address: formattedAddress || null,
+        },
       });
       setErrors(validationErrors);
     }
   };
 
-  const handleNumberChange = (e) => {
-    setNumber(e.target.value);
+  const handleStreetChange = (e) => {
+    const newStreet = e.target.value;
+    setStreet(newStreet);
+    updateAddress(newStreet, number);
+  };
 
-    if (hasTriedSubmit) {
-      const formattedAddress =
-        street.trim() && (e.target.value.trim() || "S/N")
-          ? `${street.trim()} ${e.target.value.trim() || "S/N"}`
-          : "";
-      const validationErrors = validateAddPropertyForm({
-        ...property,
-        address: formattedAddress,
-      });
-      setErrors(validationErrors);
-    }
+  const handleNumberChange = (e) => {
+    const newNumber = e.target.value;
+    setNumber(newNumber);
+    updateAddress(street, newNumber);
   };
 
   const isDefault = number.trim() === "";
 
   return (
     <div className="flex gap-2 rounded-sm w-full">
+      {/* Calle */}
       <div className="flex flex-col w-2/3 gap-1">
         <div className="flex justify-between items-baseline">
           <label htmlFor="street">Calle</label>
           <label htmlFor="streetError" className="text-red-500 text-sm">
-            {errors.address && errors.address}
+            {errors?.location?.address && errors.location.address}
           </label>
         </div>
         <input
           type="text"
-          placeholder="Nombre de la Calle"
+          id="street"
+          placeholder="Nombre de la calle"
           className="p-2 bg-third rounded-sm drop-shadow-sm w-full"
           value={street}
           onChange={handleStreetChange}
@@ -101,11 +89,11 @@ const AddressFields = ({
         />
       </div>
 
+      {/* Altura */}
       <div className="flex flex-col w-1/3 gap-1">
         <label htmlFor="number">Altura</label>
         <input
           type="text"
-          name="number"
           id="number"
           className="p-2 bg-third rounded-sm drop-shadow-sm w-full text-center"
           placeholder={isDefault ? "S/N" : ""}

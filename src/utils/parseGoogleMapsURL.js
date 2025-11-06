@@ -1,5 +1,5 @@
 export const parseGoogleMapsUrl = async (url, token, tenantId) => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/location/parse`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/places/parse`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -15,5 +15,5 @@ export const parseGoogleMapsUrl = async (url, token, tenantId) => {
   }
 
   const data = await response.json();
-  return data.data || data;
+  return data.location;
 };

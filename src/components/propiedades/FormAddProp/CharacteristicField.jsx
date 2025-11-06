@@ -3,10 +3,10 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 import { normalizeText } from "@/helpers/normalizeText";
-import { useFetchCharacteristics } from "@/hooks/useFetchCharacteristics";
+import { useFetchCharacteristics } from "@/hooks/useFetchCharacteristics"; // 👈 nuevo hook
 import { validateAddPropertyForm } from "@/utils/validateAddPropertyForm";
 
-const CharacteristicField = ({
+const CharacteristicsField = ({
   property,
   setProperty,
   errors,
@@ -14,72 +14,65 @@ const CharacteristicField = ({
   hasTriedSubmit,
 }) => {
   const { characteristics, loading, error } = useFetchCharacteristics();
-
   const [inputValue, setInputValue] = useState("");
   const [suggestionsVisible, setSuggestionsVisible] = useState(false);
 
   const selectedCharacteristics = property.characteristics || [];
 
-  // Filtra sugerencias según el texto ingresado
+  // Filtrar sugerencias (sin repetir ids existentes)
   const filteredSuggestions =
     characteristics?.filter(
       (c) =>
         normalizeText(c.name).includes(normalizeText(inputValue)) &&
         !selectedCharacteristics.some(
-          (sel) => normalizeText(sel.slug) === normalizeText(c.slug)
+          (sel) => sel.exists && sel.value === c.id
         )
     ) || [];
 
-  const handleAddCharacteristic = (characteristic) => {
-    setProperty({
-      ...property,
-      characteristics: [...selectedCharacteristics, characteristic],
-    });
-    setInputValue("");
-    setSuggestionsVisible(false);
+  const updateCharacteristics = (newList) => {
+    const updatedProperty = { ...property, characteristics: newList };
+    setProperty(updatedProperty);
 
     if (hasTriedSubmit) {
-      const validationErrors = validateAddPropertyForm({
-        ...property,
-        characteristics: [...selectedCharacteristics, characteristic],
-      });
+      const validationErrors = validateAddPropertyForm(updatedProperty);
       setErrors(validationErrors);
     }
   };
 
-  const handleRemoveCharacteristic = (slug) => {
-    setProperty({
-      ...property,
-      characteristics: selectedCharacteristics.filter((c) => c.slug !== slug),
-    });
+  const handleAddCharacteristic = (characteristicObj) => {
+    updateCharacteristics([...selectedCharacteristics, characteristicObj]);
+    setInputValue("");
+    setSuggestionsVisible(false);
+  };
 
-    if (hasTriedSubmit) {
-      const validationErrors = validateAddPropertyForm({
-        ...property,
-        characteristics: selectedCharacteristics.filter((c) => c.slug !== slug),
-      });
-      setErrors(validationErrors);
-    }
+  const handleRemoveCharacteristic = (index) => {
+    const newList = selectedCharacteristics.filter((_, i) => i !== index);
+    updateCharacteristics(newList);
   };
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && inputValue.trim() !== "") {
       e.preventDefault();
 
+      // Verificar si existe una característica igual
       const existing = characteristics.find(
         (c) => normalizeText(c.name) === normalizeText(inputValue)
       );
 
-      // Si existe en la lista, se agrega con su slug
-      // Si no, se crea una nueva con slug generado
-      const newCharacteristic =
-        existing || {
-          slug: normalizeText(inputValue.trim().replace(/\s+/g, "-")),
-          name: inputValue.trim(),
-        };
+      const newCharacteristic = existing
+        ? { exists: true, value: existing.id }
+        : { exists: false, value: inputValue.trim() };
 
-      handleAddCharacteristic({ slug: newCharacteristic.slug });
+      handleAddCharacteristic(newCharacteristic);
     }
+  };
+
+  const getDisplayName = (c) => {
+    if (c.exists) {
+      const match = characteristics.find((cm) => cm.id === c.value);
+      return match ? match.name : `ID: ${c.value}`;
+    }
+    return c.value;
   };
 
   return (
@@ -87,16 +80,16 @@ const CharacteristicField = ({
       <label>Características</label>
 
       <div className="bg-third p-2 rounded-sm flex flex-wrap gap-2 items-center">
-        {selectedCharacteristics.map((c) => (
+        {selectedCharacteristics.map((c, i) => (
           <div
-            key={c.slug}
+            key={`${c.exists}-${c.value}-${i}`}
             className="bg-contrast px-2 py-1 rounded-sm flex items-center gap-1"
           >
-            <span className="text-sm">{c.slug}</span>
+            <span className="text-sm">{getDisplayName(c)}</span>
             <X
               size={14}
               className="cursor-pointer hover:text-red-500"
-              onClick={() => handleRemoveCharacteristic(c.slug)}
+              onClick={() => handleRemoveCharacteristic(i)}
             />
           </div>
         ))}
@@ -129,7 +122,9 @@ const CharacteristicField = ({
               <li
                 key={c.id}
                 className="p-2 text-sm hover:bg-third cursor-pointer"
-                onClick={() => handleAddCharacteristic({ slug: c.slug })}
+                onClick={() =>
+                  handleAddCharacteristic({ exists: true, value: c.id })
+                }
               >
                 {c.name}
               </li>
@@ -140,4 +135,4 @@ const CharacteristicField = ({
   );
 };
 
-export default CharacteristicField;
+export default CharacteristicsField;

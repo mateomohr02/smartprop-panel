@@ -14,71 +14,66 @@ const ComoditiesField = ({
   hasTriedSubmit,
 }) => {
   const { comodities, loading, error } = useFetchComodities();
-
   const [inputValue, setInputValue] = useState("");
   const [suggestionsVisible, setSuggestionsVisible] = useState(false);
 
   const selectedComodities = property.comodities || [];
 
-  // Filtra sugerencias según el texto ingresado
+  // Filtrar sugerencias (comodidades existentes no deben repetirse)
   const filteredSuggestions =
     comodities?.filter(
       (c) =>
         normalizeText(c.name).includes(normalizeText(inputValue)) &&
         !selectedComodities.some(
-          (sel) => normalizeText(sel.slug) === normalizeText(c.slug)
+          (sel) => sel.exists && sel.value === c.id
         )
     ) || [];
 
-  const handleAddComodity = (comodity) => {
-    setProperty({
-      ...property,
-      comodities: [...selectedComodities, comodity],
-    });
-    setInputValue("");
-    setSuggestionsVisible(false);
+  const updateComodities = (newComodities) => {
+    const updatedProperty = { ...property, comodities: newComodities };
+    setProperty(updatedProperty);
 
     if (hasTriedSubmit) {
-      const validationErrors = validateAddPropertyForm({
-        ...property,
-        comodities: [...selectedComodities, comodity],
-      });
+      const validationErrors = validateAddPropertyForm(updatedProperty);
       setErrors(validationErrors);
     }
   };
 
-  const handleRemoveComodity = (slug) => {
-    setProperty({
-      ...property,
-      comodities: selectedComodities.filter((c) => c.slug !== slug),
-    });
+  const handleAddComodity = (comodityObj) => {
+    updateComodities([...selectedComodities, comodityObj]);
+    setInputValue("");
+    setSuggestionsVisible(false);
+  };
 
-    if (hasTriedSubmit) {
-      const validationErrors = validateAddPropertyForm({
-        ...property,
-        comodities: selectedComodities.filter((c) => c.slug !== slug),
-      });
-      setErrors(validationErrors);
-    }
+  const handleRemoveComodity = (index) => {
+    const newComodities = selectedComodities.filter((_, i) => i !== index);
+    updateComodities(newComodities);
   };
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && inputValue.trim() !== "") {
       e.preventDefault();
 
+      // Verificar si la comodidad existe
       const existing = comodities.find(
         (c) => normalizeText(c.name) === normalizeText(inputValue)
       );
 
-      // Si existe, usar su slug; si no, generar uno nuevo
-      const newComodity =
-        existing || {
-          slug: normalizeText(inputValue.trim().replace(/\s+/g, "-")),
-          name: inputValue.trim(),
-        };
+      const newComodity = existing
+        ? { exists: true, value: existing.id }
+        : { exists: false, value: inputValue.trim() };
 
-      handleAddComodity({ slug: newComodity.slug });
+      handleAddComodity(newComodity);
     }
+  };
+
+  // Mostrar nombre legible
+  const getDisplayName = (c) => {
+    if (c.exists) {
+      const match = comodities.find((cm) => cm.id === c.value);
+      return match ? match.name : `ID: ${c.value}`;
+    }
+    return c.value;
   };
 
   return (
@@ -86,16 +81,16 @@ const ComoditiesField = ({
       <label>Comodidades</label>
 
       <div className="bg-third p-2 rounded-sm flex flex-wrap gap-2 items-center">
-        {selectedComodities.map((c) => (
+        {selectedComodities.map((c, i) => (
           <div
-            key={c.slug}
+            key={`${c.exists}-${c.value}-${i}`}
             className="bg-contrast px-2 py-1 rounded-sm flex items-center gap-1"
           >
-            <span className="text-sm">{c.slug}</span>
+            <span className="text-sm">{getDisplayName(c)}</span>
             <X
               size={14}
               className="cursor-pointer hover:text-red-500"
-              onClick={() => handleRemoveComodity(c.slug)}
+              onClick={() => handleRemoveComodity(i)}
             />
           </div>
         ))}
@@ -128,7 +123,7 @@ const ComoditiesField = ({
               <li
                 key={c.id}
                 className="p-2 text-sm hover:bg-third cursor-pointer"
-                onClick={() => handleAddComodity({ slug: c.slug })}
+                onClick={() => handleAddComodity({ exists: true, value: c.id })}
               >
                 {c.name}
               </li>

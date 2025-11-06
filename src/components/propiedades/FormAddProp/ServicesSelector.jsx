@@ -7,9 +7,12 @@ const ServicesSelector = ({ property, setProperty, errors, setErrors, hasTriedSu
   const handleToggle = (serviceKey) => {
     const updated = {
       ...property,
-      services: {
-        ...property.services,
-        [serviceKey]: !property.services[serviceKey],
+      data: {
+        ...property.data,
+        services: {
+          ...property.data.services,
+          [serviceKey]: !property.data.services[serviceKey],
+        },
       },
     };
 
@@ -25,8 +28,9 @@ const ServicesSelector = ({ property, setProperty, errors, setErrors, hasTriedSu
     <div className="w-full flex flex-col gap-1">
       <div className="flex justify-between items-baseline">
         <label htmlFor="services">Servicios</label>
-        {/* Muestra un error general si alguno falta */}
-        {(errors["services.light"] || errors["services.water"] || errors["services.gas"]) && (
+        {(errors["data.services.light"] ||
+          errors["data.services.water"] ||
+          errors["data.services.gas"]) && (
           <label htmlFor="servicesError" className="text-red-500 text-sm">
             Debe seleccionar los servicios
           </label>
@@ -39,14 +43,14 @@ const ServicesSelector = ({ property, setProperty, errors, setErrors, hasTriedSu
           <input
             type="checkbox"
             id="light"
-            checked={property.services.light}
+            checked={property.data.services.light}
             onChange={() => handleToggle("light")}
           />
           <label htmlFor="light" className="cursor-pointer">
             Luz
           </label>
-          {errors["services.light"] && (
-            <span className="text-red-500 text-xs">{errors["services.light"]}</span>
+          {errors["data.services.light"] && (
+            <span className="text-red-500 text-xs">{errors["data.services.light"]}</span>
           )}
         </div>
 
@@ -55,14 +59,14 @@ const ServicesSelector = ({ property, setProperty, errors, setErrors, hasTriedSu
           <input
             type="checkbox"
             id="water"
-            checked={property.services.water}
+            checked={property.data.services.water}
             onChange={() => handleToggle("water")}
           />
           <label htmlFor="water" className="cursor-pointer">
             Agua Corriente
           </label>
-          {errors["services.water"] && (
-            <span className="text-red-500 text-xs">{errors["services.water"]}</span>
+          {errors["data.services.water"] && (
+            <span className="text-red-500 text-xs">{errors["data.services.water"]}</span>
           )}
         </div>
 
@@ -71,14 +75,14 @@ const ServicesSelector = ({ property, setProperty, errors, setErrors, hasTriedSu
           <input
             type="checkbox"
             id="gas"
-            checked={property.services.gas}
+            checked={property.data.services.gas}
             onChange={() => handleToggle("gas")}
           />
           <label htmlFor="gas" className="cursor-pointer">
             Gas Natural
           </label>
-          {errors["services.gas"] && (
-            <span className="text-red-500 text-xs">{errors["services.gas"]}</span>
+          {errors["data.services.gas"] && (
+            <span className="text-red-500 text-xs">{errors["data.services.gas"]}</span>
           )}
         </div>
       </div>

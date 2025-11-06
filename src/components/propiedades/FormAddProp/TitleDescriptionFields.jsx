@@ -8,61 +8,63 @@ const TitleDescriptionFields = ({
   setProperty,
   errors,
   setErrors,
-  hasTriedSubmit
+  hasTriedSubmit,
 }) => {
+  const handleChange = (field, value) => {
+    const updated = {
+      ...property,
+      initialData: {
+        ...property.initialData,
+        [field]: value,
+      },
+    };
+
+    setProperty(updated);
+
+    if (hasTriedSubmit) {
+      const validationErrors = validateAddPropertyForm(updated);
+      setErrors(validationErrors);
+    }
+  };
+
   return (
     <div className="w-full gap-2 flex flex-col">
+      {/* --- Título --- */}
       <div className="flex flex-col w-full gap-1">
         <div className="flex justify-between items-baseline">
           <label htmlFor="title">Título</label>
-          <label htmlFor="titleError" className="text-red-500 text-sm ">
-            {errors.title && errors.title}
-          </label>
+          {errors?.initialData?.title && (
+            <span className="text-red-500 text-sm">
+              {errors.initialData.title}
+            </span>
+          )}
         </div>
         <input
           type="text"
-          name="title"
-          placeholder="Ingrese el título de la propiedad"
           id="title"
+          placeholder="Ingrese el título de la propiedad"
           className="bg-third rounded-sm p-2 drop-shadow-sm"
-          value={property.title}
-          onChange={(e) => {
-            const newValue = e.target.value;
-            const updated = { ...property, title: newValue };
-            setProperty(updated);
-
-            if (hasTriedSubmit) {
-              const validationErrors = validateAddPropertyForm(updated);
-              console.log(errors, validationErrors);
-              setErrors(validationErrors);
-            }
-          }}
+          value={property.initialData.title || ""}
+          onChange={(e) => handleChange("title", e.target.value)}
         />
       </div>
 
+      {/* --- Descripción --- */}
       <div className="flex flex-col w-full gap-1">
         <div className="flex justify-between items-baseline">
           <label htmlFor="description">Descripción</label>
-          <label htmlFor="descriptionError" className="text-red-500 text-sm ">
-            {errors.description && errors.description}
-          </label>
+          {errors?.initialData?.description && (
+            <span className="text-red-500 text-sm">
+              {errors.initialData.description}
+            </span>
+          )}
         </div>
         <textarea
-          name="description"
-          placeholder="Ingrese la descripción."
           id="description"
+          placeholder="Ingrese la descripción"
           className="bg-third rounded-sm p-2 drop-shadow-sm max-h-[200px]"
-          value={property.description}
-          onChange={(e) => {
-            const newValue = e.target.value;
-            const updated = { ...property, description: newValue };
-            setProperty(updated);
-
-            if (hasTriedSubmit) {
-              const validationErrors = validateAddPropertyForm(updated);
-              setErrors(validationErrors);
-            }
-          }}
+          value={property.initialData.description || ""}
+          onChange={(e) => handleChange("description", e.target.value)}
         />
       </div>
     </div>

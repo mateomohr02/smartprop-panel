@@ -1,176 +1,171 @@
 export const validateAddPropertyForm = (formData) => {
-  const errors = {};
+  const errors = {
+    initialData: {},
+    data: {},
+    location: {},
+    multimedia: {},
+    comodities: [],
+    characteristics: [],
+    rooms: [],
+  };
 
-  // Título
-  if (!formData.title || formData.title.trim().length < 15) {
-    errors.title = "Al menos 15 caracteres";
-  }
-
-  // Tipo de propiedad
-  if (
-    !formData.propertyTypeSlug ||
-    formData.propertyTypeSlug.trim().length < 2
-  ) {
-    errors.propertyTypeSlug = "Seleccionar";
-  }
-
-  // Descripción
-  if (!formData.description || formData.description.trim().length < 30) {
-    errors.description = "Al menos 30 caracteres";
-  }
-
-  // Operación
-  if (!["sale", "rent", "short-term"].includes(formData.operation)) {
-    errors.operation = "Seleccionar";
-  }
-
-  // Precio
-  if (
-    formData.price === "" ||
-    isNaN(Number(formData.price)) ||
-    Number(formData.price) < 0
-  ) {
-    errors.price = "Ingresar";
-  }
-
-  if (!["ARS", "USD", "EUR", "BRL"].includes(formData.priceFIAT)) {
-    errors.priceFIAT = "Seleccionar";
-  }
-
-  // Gastos
-  if (
-    formData.expenses !== "" &&
-    (isNaN(Number(formData.expenses)) || Number(formData.expenses) < 0)
-  ) {
-    errors.expenses = "Ingresar";
+  // --- INITIAL DATA ---
+  if (!formData.initialData.title || formData.initialData.title.trim().length < 15) {
+    errors.initialData.title = "Al menos 15 caracteres";
   }
 
   if (
-    formData.expensesFIAT &&
-    !["ARS", "USD", "EUR", "BRL"].includes(formData.expensesFIAT)
+    !formData.initialData.propertyType ||
+    !formData.initialData.propertyType.value ||
+    formData.initialData.propertyType.value.trim().length < 2
   ) {
-    errors.expensesFIAT = "Seleccionar";
+    errors.initialData.propertyType = "Seleccionar tipo de propiedad";
   }
 
-  // Condición
-  if (!formData.condition) {
-    errors.condition = "Seleccionar";
+  if (!formData.initialData.description || formData.initialData.description.trim().length < 30) {
+    errors.initialData.description = "Al menos 30 caracteres";
   }
 
-  // Edad
-  if (
-    !formData.age ||
-    (formData.age !== "" &&
-      (!Number.isInteger(Number(formData.age)) || Number(formData.age) < 0))
-  ) {
-    errors.age = "Ingresar";
+  // --- DATA ---
+  const data = formData.data || {};
+
+  if (!data.price?.value || isNaN(Number(data.price.value)) || Number(data.price.value) <= 0) {
+    errors.data.price = "Ingresar precio válido";
   }
 
-  // Disponibilidad
-  if (!["inmediate", "date"].includes(formData.availabilityType)) {
-    errors.availabilityType = "Seleccionar";
+  if (!["ARS", "USD", "EUR", "BRL"].includes(data.price?.currency)) {
+    errors.data.priceCurrency = "Seleccionar";
   }
 
-  if (formData.availabilityType === "date" && !formData.availabilityDate) {
-    errors.availabilityDate = "Ingresar fecha";
+  if (data.expenses !== null && (isNaN(Number(data.expenses)) || Number(data.expenses) < 0)) {
+    errors.data.expenses = "Ingresar gastos válidos";
   }
 
-  // Superficie
-  if (
-    formData.surface.covered === "" ||
-    isNaN(Number(formData.surface.covered)) ||
-    Number(formData.surface.covered) < 0
-  ) {
-    errors["surface.covered"] = "Ingresar";
+  if (data.operation === null || !(data.operation == "sale" || data.operation == "rent" || data.operation == "short-term")) {
+    errors.data.operation = "Seleccionar operación";
+  }
+
+  if (!data.condition || !(data.condition === "new" || data.condition === "like-new" || data.condition === "good" || data.condition === "to-renovate")) {
+    errors.data.condition = "Seleccionar condición";
   }
 
   if (
-    formData.surface.total === "" ||
-    isNaN(Number(formData.surface.total)) ||
-    Number(formData.surface.total) < 0
+    data.age === null || data.age === "" ||
+    (!Number.isInteger(Number(data.age)) || Number(data.age) < 0)
   ) {
-    errors["surface.total"] = "Ingresar";
+    errors.data.age = "Ingresar";
   }
 
-  // Servicios
+  if (!["inmediate", "date"].includes(data.availability?.type)) {
+    errors.data.availability = "Seleccionar";
+  }
+
+  if (data.availability?.type === "date" && !data.availability?.date) {
+    errors.data.availabilityDate = "Ingresar fecha";
+  }
+
+  if (
+    data.surface?.covered === null ||
+    isNaN(Number(data.surface.covered)) ||
+    Number(data.surface.covered) < 0
+  ) {
+    errors.data.surfaceCovered = "Ingresar";
+  }
+
+  if (
+    data.surface?.total === null ||
+    isNaN(Number(data.surface.total)) ||
+    Number(data.surface.total) < 0 || 
+    data.surface.total < data.surface.covered
+  ) {
+    errors.data.surfaceTotal = "Ingresar";
+  }
+
   ["light", "water", "gas"].forEach((service) => {
-    if (typeof formData.services[service] !== "boolean") {
-      errors[`services.${service}`] = `Debe seleccionar si tiene ${service}`;
+    if (typeof data.services?.[service] !== "boolean") {
+      errors.data[`service_${service}`] = `Debe seleccionar si tiene ${service}`;
     }
   });
-
-  // Dirección y ubicación
-  if (!formData.address || formData.address.trim().length < 5) {
-    errors.address = "Ingresar";
-  }
-  if (
-    !formData.place.countryInput ||
-    (typeof formData.place.countryInput === "string" &&
-      formData.place.countryInput.trim().length < 4)
-  ) {
-    errors["place.countryInput"] = "Ingresar País";
-  }
-
-  if (
-    !formData.place.provinceInput ||
-    (typeof formData.place.provinceInput === "string" &&
-      formData.place.provinceInput.trim().length < 4)
-  ) {
-    errors["place.provinceInput"] = "Ingresar Provincia";
-  }
-
-  if (
-    !formData.place.cityInput ||
-    (typeof formData.place.cityInput === "string" &&
-      formData.place.cityInput.trim().length < 4)
-  ) {
-    errors["place.cityInput"] = "Ingresar Ciudad";
-  }
-
-  if (
-    !formData.place.neighborhoodInput ||
-    (typeof formData.place.neighborhoodInput === "string" &&
-      formData.place.neighborhoodInput.trim().length < 4)
-  ) {
-    errors["place.neighborhoodInput"] = "Ingresar Barrio";
-  }
-
-  if (!formData.mapLocation.lat || !formData.mapLocation.lng) {
-    errors.mapLocation = "Subir ubicación";
-  }
-
-  // Multimedia
-  if (!formData.multimedia.images || formData.multimedia.images.length === 0) {
-    errors["multimedia.images"] = "Agregar imágenes";
-  }
-
-  // Rooms y comodities opcionales
-  if (formData.otherRooms) {
-    formData.otherRooms.forEach((room, idx) => {
-      if (!room.roomSlug || room.roomSlug.length < 4) {
-        errors[`otherRooms.${idx}.roomSlug`] = "Al menos 4 caracteres";
-      }
-      if (!room.value || Number(room.value) < 1) {
-        errors[`otherRooms.${idx}.value`] = "Agregar cantidad válida";
-      }
-      if (room.size) {
-        room.size.forEach((s, i) => {
-          if (Number(s) <= 0) {
-            errors[`otherRooms.${idx}.size.${i}`] = "Agregar tamaño válido";
-          }
-        });
-      }
-    });
-  }
 
   ["rooms", "bedrooms", "bathrooms", "garages"].forEach((field) => {
     if (
-      formData[field] !== "" &&
-      (isNaN(Number(formData[field])) || Number(formData[field]) <= 0)
+      data[field] === null ||
+      data[field] === "" &&
+      (isNaN(Number(data[field])) || Number(data[field]) <= 0)
     ) {
-      errors[field] = "Ingresar un valor válido";
+      errors.data[field] = "Ingresar";
     }
   });
+
+  // --- LOCATION ---
+  const location = formData.location || {};
+
+  if (!location.country?.value) {
+    errors.location.country = "Ingresar país";
+  }
+
+  if (!location.province?.value) {
+    errors.location.province = "Ingresar provincia";
+  }
+
+  if (!location.city?.value) {
+    errors.location.city = "Ingresar ciudad";
+  }
+
+  if (!location.neighborhood?.value) {
+    errors.location.neighborhood = "Ingresar barrio";
+  }
+
+  if (!location.address || location.address.trim().length < 5) {
+    errors.location.address = "Ingresar dirección válida";
+  }
+
+  if (
+    !location.mapLocation ||
+    isNaN(Number(location.mapLocation.lat)) ||
+    isNaN(Number(location.mapLocation.lng))
+  ) {
+    errors.location.mapLocation = "Ubicación no válida";
+  }
+
+  // --- MULTIMEDIA ---
+  if (!formData.multimedia.images || formData.multimedia.images.length === 0) {
+    errors.multimedia.images = "Agregar al menos una imagen";
+  }
+
+  // --- ROOMS OPCIONALES ---
+  if (formData.rooms && Array.isArray(formData.rooms)) {
+    errors.rooms = formData.rooms.map((room) => {
+      const roomErrors = {};
+      if (!room.value || room.value.trim().length < 3) {
+        roomErrors.value = "Al menos 3 caracteres";
+      }
+      if (room.quantity !== undefined && (isNaN(room.quantity) || room.quantity < 1)) {
+        roomErrors.quantity = "Cantidad inválida";
+      }
+      if (room.size && Array.isArray(room.size)) {
+        room.size.forEach((s, i) => {
+          if (isNaN(Number(s)) || Number(s) <= 0) {
+            roomErrors[`size_${i}`] = "Tamaño inválido";
+          }
+        });
+      }
+      return roomErrors;
+    });
+  }
+
+  // --- COMODITIES Y CHARACTERISTICS ---
+  if (formData.comodities && Array.isArray(formData.comodities)) {
+    errors.comodities = formData.comodities.map((c) =>
+      !c.value || c.value.trim().length < 3 ? { value: "Campo inválido" } : {}
+    );
+  }
+
+  if (formData.characteristics && Array.isArray(formData.characteristics)) {
+    errors.characteristics = formData.characteristics.map((c) =>
+      !c.value || c.value.trim().length < 3 ? { value: "Campo inválido" } : {}
+    );
+  }
 
   return errors;
 };

@@ -15,21 +15,33 @@ const PropertyTypeSelector = ({
   const { propertyTypes, loading, error } = useFetchPropertyTypes();
 
   const [selectedType, setSelectedType] = useState(
-    property.propertyTypeSlug ? property.propertyTypeSlug : ""
+    property.initialData?.propertyType?.exists
+      ? property.initialData.propertyType.value
+      : ""
   );
-  const [customType, setCustomType] = useState("");
+  const [customType, setCustomType] = useState(
+    !property.initialData?.propertyType?.exists && property.initialData?.propertyType?.value
+      ? property.initialData.propertyType.value
+      : ""
+  );
 
   const handleSelectChange = (e) => {
     const value = e.target.value;
     setSelectedType(value);
 
-    const updated = { ...property };
+    let updated = { ...property };
 
     if (value === "other") {
-      updated.propertyTypeSlug = "";
+      updated.initialData = {
+        ...property.initialData,
+        propertyType: { exists: false, value: "" },
+      };
       setCustomType("");
     } else {
-      updated.propertyTypeSlug = value;
+      updated.initialData = {
+        ...property.initialData,
+        propertyType: { exists: true, value },
+      };
       setCustomType("");
     }
 
@@ -45,7 +57,14 @@ const PropertyTypeSelector = ({
     const value = e.target.value;
     setCustomType(value);
 
-    const updated = { ...property, propertyTypeSlug: value };
+    const updated = {
+      ...property,
+      initialData: {
+        ...property.initialData,
+        propertyType: { exists: false, value },
+      },
+    };
+
     setProperty(updated);
 
     if (hasTriedSubmit) {
@@ -74,9 +93,11 @@ const PropertyTypeSelector = ({
     <div className="w-full flex flex-col gap-1">
       <div className="flex items-baseline justify-between">
         <label htmlFor="propertyType">Tipo de Propiedad</label>
-        <label htmlFor="propertyTypeError" className="text-red-500 text-sm">
-          {errors.propertyTypeSlug && errors.propertyTypeSlug}
-        </label>
+        {errors?.initialData?.propertyType && (
+          <span className="text-red-500 text-sm">
+            {errors.initialData.propertyType}
+          </span>
+        )}
       </div>
 
       <div className="w-full flex flex-col gap-2">
@@ -110,12 +131,11 @@ const PropertyTypeSelector = ({
               <label htmlFor="otherPropertyType" className="text-sm">
                 Nuevo tipo de propiedad
               </label>
-              <label
-                htmlFor="otherPropertyTypeError"
-                className="text-red-500 text-sm"
-              >
-                {errors.propertyTypeSlug && errors.propertyTypeSlug}
-              </label>
+              {errors?.initialData?.propertyType && (
+                <span className="text-red-500 text-sm">
+                  {errors.initialData.propertyType}
+                </span>
+              )}
             </div>
             <input
               id="otherPropertyType"

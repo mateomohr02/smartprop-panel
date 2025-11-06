@@ -7,9 +7,12 @@ const SurfaceFields = ({ property, setProperty, errors, setErrors, hasTriedSubmi
   const handleChange = (field, value) => {
     const updated = {
       ...property,
-      surface: {
-        ...property.surface,
-        [field]: value,
+      data: {
+        ...property.data,
+        surface: {
+          ...property.data.surface,
+          [field]: value,
+        },
       },
     };
 
@@ -34,14 +37,14 @@ const SurfaceFields = ({ property, setProperty, errors, setErrors, hasTriedSubmi
           <div className="flex justify-between items-baseline">
             <label htmlFor="covered">Cubierta</label>
             <label htmlFor="surface.coveredError" className="text-red-500 text-sm">
-              {errors["surface.covered"] && errors["surface.covered"]}
+              {errors?.data?.surfaceCovered && errors.data.surfaceCovered}
             </label>
           </div>
           <input
-            type="text"
+            type="number"
             id="covered"
             className="p-2 bg-third rounded-sm drop-shadow-sm w-full"
-            value={property.surface.covered || ""}
+            value={property.data.surface.covered || ""}
             onChange={(e) => handleChange("covered", e.target.value)}
           />
         </div>
@@ -51,14 +54,14 @@ const SurfaceFields = ({ property, setProperty, errors, setErrors, hasTriedSubmi
           <div className="flex justify-between items-baseline">
             <label htmlFor="total">Total</label>
             <label htmlFor="surface.totalError" className="text-red-500 text-sm">
-              {errors["surface.total"] && errors["surface.total"]}
+              {errors?.data?.surfaceTotal && errors.data.surfaceTotal}
             </label>
           </div>
           <input
-            type="text"
+            type="number"
             id="total"
             className="p-2 bg-third rounded-sm drop-shadow-sm w-full"
-            value={property.surface.total || ""}
+            value={property.data.surface.total || ""}
             onChange={(e) => handleChange("total", e.target.value)}
           />
         </div>

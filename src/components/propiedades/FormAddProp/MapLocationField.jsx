@@ -21,20 +21,25 @@ const MapLocationField = ({
     shouldParse ? linkInput : null
   );
 
-  // ✅ Actualiza property cuando cambia la ubicación
+  // ✅ Actualiza property.location.coordinates cuando se obtiene la ubicación
   useEffect(() => {
     if (location && !loading && !error && shouldParse) {
-      setProperty((prev) => ({
-        ...prev,
-        mapLocation: location,
-      }));
+      const updated = {
+        ...property,
+        location: {
+          ...property.location,
+          mapLocation: {
+            lat: location.lat,
+            lng: location.lng
+          },
+        },
+      };
+
+      setProperty(updated);
       setShouldParse(false);
 
       if (hasTriedSubmit) {
-        const validationErrors = validateAddPropertyForm({
-          ...property,
-          mapLocation: location,
-        });
+        const validationErrors = validateAddPropertyForm(updated);
         setErrors(validationErrors);
       }
     }
@@ -66,14 +71,14 @@ const MapLocationField = ({
     <div className="w-full flex flex-col gap-1">
       <div className="w-full flex flex-row justify-between">
         <label htmlFor="map">Mapa</label>
-        {errors.mapLocation && (
+        {errors.location?.mapLocation && (
           <label htmlFor="mapError" className="text-red-500 text-sm">
-            {errors.mapLocation}
+            {errors.location.mapLocation}
           </label>
         )}
       </div>
 
-      <div className="border border-gray-200 px-2 pb-2 py-1 flex gap-2 rounded-sm">
+      <div className="border border-gray-200 px-2 pb-2 py-1 flex gap-2 rounded-sm bg-contrast">
         <div className="flex flex-col flex-1 gap-1">
           <label htmlFor="latitude">URL Google Maps</label>
 
@@ -115,8 +120,12 @@ const MapLocationField = ({
         </div>
       </div>
 
-      {error && <p className="text-red-500 text-sm mt-1"> {error}</p>}
-      {location && <MapPreview property={property} />}
+      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+      {property.location?.mapLocation?.lat && (
+        <MapPreview
+          property={property}
+        />
+      )}
     </div>
   );
 };

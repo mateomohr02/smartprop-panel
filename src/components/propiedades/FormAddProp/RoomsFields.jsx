@@ -14,21 +14,34 @@ const RoomsFields = ({
   hasTriedSubmit,
 }) => {
   const [inputValue, setInputValue] = useState("");
-  const [quantity, setQuantity] = useState(""); 
+  const [quantity, setQuantity] = useState("");
   const [sizes, setSizes] = useState([""]);
   const [suggestionsVisible, setSuggestionsVisible] = useState(false);
-  const { rooms } = useFetchOtherRooms();
+  const { rooms } = useFetchOtherRooms(); // rooms: [{ id, name, slug }]
 
-  const selectedRooms = property.otherRooms || [];
+  const selectedRooms = property.rooms || [];
 
+  // Filtra sugerencias (evita duplicados)
   const filteredSuggestions =
     rooms?.filter(
       (r) =>
         normalizeText(r.name).includes(normalizeText(inputValue)) &&
         !selectedRooms.some(
-          (sel) => normalizeText(sel.roomSlug) === normalizeText(r.slug)
+          (sel) =>
+            sel.exists &&
+            normalizeText(sel.value) === normalizeText(r.id.toString())
         )
     ) || [];
+
+  const updateRooms = (newList) => {
+    const updatedProperty = { ...property, rooms: newList };
+    setProperty(updatedProperty);
+
+    if (hasTriedSubmit) {
+      const validationErrors = validateAddPropertyForm(updatedProperty);
+      setErrors(validationErrors);
+    }
+  };
 
   const handleAddRoom = () => {
     if (!inputValue.trim()) return;
@@ -37,52 +50,32 @@ const RoomsFields = ({
       (r) => normalizeText(r.name) === normalizeText(inputValue)
     );
 
-    const finalQuantity = parseInt(quantity) || 1; 
+    const finalQuantity = parseInt(quantity) || 1;
+    const validSizes = sizes
+      .filter((s) => s.trim() !== "")
+      .map((s) => parseFloat(s))
+      .filter((n) => !isNaN(n));
 
     const newRoom = {
-      roomSlug: existing ? existing.name : inputValue.trim(),
-      value: finalQuantity,
+      exists: !!existing,
+      value: existing ? existing.id : inputValue.trim(),
+      quantity: finalQuantity,
     };
 
-    if (finalQuantity > 1 || sizes.some((s) => s.trim() !== "")) {
-      const validSizes = sizes
-        .filter((s) => s.trim() !== "")
-        .map((s) => parseFloat(s));
-      if (validSizes.length) newRoom.size = validSizes;
-    }
+    if (validSizes.length) newRoom.size = validSizes;
 
-    setProperty({
-      ...property,
-      otherRooms: [...selectedRooms, newRoom],
-    });
+    updateRooms([...selectedRooms, newRoom]);
 
-    if (hasTriedSubmit) {
-      const validationErrors = validateAddPropertyForm({
-        ...property,
-        otherRooms: [...selectedRooms, newRoom],
-      });
-      setErrors(validationErrors);
-    }
-
+    // Reset inputs
     setInputValue("");
     setQuantity("");
     setSizes([""]);
     setSuggestionsVisible(false);
   };
 
-  const handleRemoveRoom = (roomSlug) => {
-    setProperty({
-      ...property,
-      otherRooms: selectedRooms.filter((r) => r.roomSlug !== roomSlug),
-    });
-
-    if (hasTriedSubmit) {
-      const validationErrors = validateAddPropertyForm({
-        ...property,
-        otherRooms: selectedRooms.filter((r) => r.roomSlug !== roomSlug),
-      });
-      setErrors(validationErrors);
-    }
+  const handleRemoveRoom = (index) => {
+    const newList = selectedRooms.filter((_, i) => i !== index);
+    updateRooms(newList);
   };
 
   const handleQuantityChange = (val) => {
@@ -111,6 +104,14 @@ const RoomsFields = ({
     setSizes(updated);
   };
 
+  const getRoomName = (room) => {
+    if (room.exists) {
+      const found = rooms.find((r) => r.id === room.value);
+      return found ? found.name : `ID: ${room.value}`;
+    }
+    return room.value;
+  };
+
   return (
     <div className="w-full flex flex-col gap-2">
       <label className="text-sm font-medium">Tipos de Ambientes</label>
@@ -120,27 +121,27 @@ const RoomsFields = ({
         <div className="flex flex-wrap gap-2">
           {selectedRooms.map((r, idx) => (
             <div
-              key={`${r.roomSlug}-${idx}`}
+              key={`${r.value}-${idx}`}
               className="bg-third border border-gray-200 p-2 rounded-sm flex items-center gap-1"
             >
-              <span>
-                {r.roomSlug}
-                {r.size
-                  ? ` ${r.size.join(" - ")} (${r.value})`
-                  : r.value > 1
-                  ? ` (${r.value})`
+              <span className="text-sm">
+                {getRoomName(r)}
+                {r.size?.length
+                  ? ` (${r.quantity || 1}) - ${r.size.join("m², ")}m²`
+                  : r.quantity && r.quantity > 1
+                  ? ` (${r.quantity})`
                   : ""}
               </span>
               <X
                 size={16}
-                className="cursor-pointer"
-                onClick={() => handleRemoveRoom(r.roomSlug)}
+                className="cursor-pointer hover:text-red-500"
+                onClick={() => handleRemoveRoom(idx)}
               />
             </div>
           ))}
         </div>
 
-        {/* Input de nombre + cantidad */}
+        {/* Input nombre + cantidad */}
         <div className="grid grid-cols-2 gap-2">
           <div className="flex flex-col relative">
             <label>Nombre</label>
@@ -151,9 +152,7 @@ const RoomsFields = ({
                 setInputValue(e.target.value);
                 setSuggestionsVisible(true);
               }}
-              onFocus={() => {
-                if (inputValue.trim()) setSuggestionsVisible(true);
-              }}
+              onFocus={() => setSuggestionsVisible(true)}
               onBlur={() => setTimeout(() => setSuggestionsVisible(false), 150)}
               className="rounded-sm p-2 bg-third focus:outline-none drop-shadow-sm"
               placeholder="Ej: Balcón"
@@ -187,7 +186,7 @@ const RoomsFields = ({
               value={quantity}
               onChange={(e) => handleQuantityChange(e.target.value)}
               className="rounded-sm p-2 bg-third focus:outline-none drop-shadow-sm"
-              placeholder="1" 
+              placeholder="1"
             />
           </div>
         </div>
@@ -206,7 +205,7 @@ const RoomsFields = ({
                   onChange={(e) => handleSizeChange(i, e.target.value)}
                   className="w-full rounded-sm p-2 bg-third focus:outline-none drop-shadow-sm"
                 />
-                <span className="text-sm text-gray-500">mts²</span>
+                <span className="text-sm text-gray-500">m²</span>
               </div>
             ))}
           </div>
@@ -221,9 +220,9 @@ const RoomsFields = ({
         </button>
       </div>
 
-      {errors.otherRooms && (
-        <label htmlFor="otherRoomsError" className="text-red-500 text-sm">
-          {errors.otherRooms}
+      {errors.rooms && (
+        <label htmlFor="roomsError" className="text-red-500 text-sm">
+          {errors.rooms}
         </label>
       )}
     </div>

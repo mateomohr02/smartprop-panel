@@ -13,8 +13,8 @@ export const submitPropertyMultimedia = async (media, token, tenantId) => {
     }
 
     // 🎥 Subir videos solo si existen
-    if (media?.video?.length) {
-      const parsedVideos = setFormData(media.video);
+    if (media?.videos?.length) { // ✅ cambio aquí
+      const parsedVideos = setFormData(media.videos); // ✅ cambio aquí
       uploadedVideos = await uploadMultimedia(parsedVideos, token, tenantId);
     }
 
