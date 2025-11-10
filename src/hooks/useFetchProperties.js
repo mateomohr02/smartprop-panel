@@ -31,9 +31,11 @@ export function useFetchProperties() {
         if (!res.ok) {
           throw new Error(`Error ${res.status}: ${res.statusText}`);
         }
+        
 
         const data = await res.json();
-        setProperties(data);
+
+        setProperties(data.properties);
       } catch (err) {
         console.error("Error al obtener propiedades:", err);
         setError(err.message);

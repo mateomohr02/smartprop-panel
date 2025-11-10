@@ -12,7 +12,7 @@ const PropiedadesPage = () => {
       <ActionButton href="/propiedades/agregar" text="+ Añadir Nueva Propiedad" />
 
       <TableProperties
-        properties={properties.data}
+        properties={properties}
         loading={loading}
         error={error}
       />
