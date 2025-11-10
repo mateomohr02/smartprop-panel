@@ -5,10 +5,12 @@ import { useFetchProperties } from "@/hooks/useFetchProperties";
 
 const ActiveProperties = () => {
   const { properties, loading, error } = useFetchProperties();
+  console.log(properties);
+  
 
   const { activeCount, totalCount } = useMemo(() => {
-    const props = properties?.data || [];
-    const active = props.filter((p) => p.isActive).length;
+    const props = properties || [];
+    const active = props.filter((p) => p.isActive && p.status === 'published').length;
     return { activeCount: active, totalCount: props.length };
   }, [properties]);
 
