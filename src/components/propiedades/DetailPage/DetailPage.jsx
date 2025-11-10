@@ -9,11 +9,11 @@ const DetailPage = () => {
 
   const {propertyId} = useParams();
 
-  const {property, loading, error} = useFetchPropertyDetail(propertyId);
+  const {property, loading, error} = useFetchPropertyDetail(propertyId);  
 
   return (
     <div className="w-full px-2 pt-1 pb-2 rounded-sm">
-      <PropertyData property={property?.data}/>
+      <PropertyData property={property}/>
     </div>
   )
 }

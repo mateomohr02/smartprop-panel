@@ -3,8 +3,6 @@
 import MapPreview from "../FormAddProp/MapPreview";
 
 const MainCard = ({ property }) => {
-  console.log(property);
-
   return (
     <div className="w-full flex flex-col px-4 pb-2 gap-3">
       <p>Título: {property?.title}</p>
@@ -56,8 +54,8 @@ const MainCard = ({ property }) => {
       </div>
       <div>
         Comodidades:{" "}
-        {property?.Comoditiess?.length > 0 ? (
-          property?.Comoditiess.map((com) => (
+        {property?.Comodities?.length > 0 ? (
+          property?.Comodities.map((com) => (
             <span key={com.id}> {com.name}</span>
           ))
         ) : (

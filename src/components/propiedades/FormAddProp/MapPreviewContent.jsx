@@ -16,9 +16,21 @@ L.Icon.Default.mergeOptions({
     "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
 });
 
-const MapPreviewContent = ({ property }) => {
-  const lat = property?.location.mapLocation?.lat;
-  const lng = property?.location.mapLocation?.lng;
+const MapPreviewContent = ({ property, isDetail = false }) => {
+  let lat;
+  let lng;
+  let title;
+
+  if (isDetail) {
+    lat = property?.mapLocation.lat;
+    lng = property?.mapLocation.lng;
+    title = property?.title;
+  }
+  else {
+    lat = property?.location.mapLocation?.lat;
+    lng = property?.location.mapLocation?.lng;
+    title = property?.initialData.title;
+  }
 
   useEffect(() => {
     if (!lat || !lng) {
@@ -47,7 +59,7 @@ const MapPreviewContent = ({ property }) => {
         />
         <Marker position={[lat, lng]}>
           <Popup>
-            {property?.initialData.title || "Aquí está la propiedad"}
+            {title || "Aquí está la propiedad"}
           </Popup>
         </Marker>
       </MapContainer>

@@ -13,7 +13,8 @@ const MapContent = dynamic(() => import("./MapPreviewContent"), {
 });
 
 const MapPreview = ({ property }) => {
-  return <MapContent property={property} />;
+  
+  return <MapContent property={property} isDetail={true}/>;
 };
 
 export default MapPreview;
