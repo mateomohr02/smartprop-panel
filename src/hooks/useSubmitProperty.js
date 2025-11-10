@@ -20,7 +20,6 @@ export function useSubmitProperty() {
   const submitProperty = async (property) => {
     setLoading(true);
     setError(null);
-
     try {
       const token = localStorage.getItem("token");
       const tenantId = localStorage.getItem("tenantId");

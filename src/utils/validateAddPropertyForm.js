@@ -37,8 +37,11 @@ export const validateAddPropertyForm = (formData) => {
     errors.data.priceCurrency = "Seleccionar";
   }
 
-  if (data.expenses !== null && (isNaN(Number(data.expenses)) || Number(data.expenses) < 0)) {
+  if (data.expenses !== null && (isNaN(Number(data.expenses.value)) || Number(data.expenses.value) < 0)) {
     errors.data.expenses = "Ingresar gastos válidos";
+  }
+  if (data.expenses !== null && !(["ARS", "USD", "EUR", "BRL"].includes(data.expenses?.currency))) {
+    errors.data.expensesCurrency = "Seleccionar";
   }
 
   if (data.operation === null || !(data.operation == "sale" || data.operation == "rent" || data.operation == "short-term")) {
@@ -116,6 +119,8 @@ export const validateAddPropertyForm = (formData) => {
     errors.location.neighborhood = "Ingresar barrio";
   }
 
+  console.log(location, 'address');
+  
   if (!location.address || location.address.trim().length < 5) {
     errors.location.address = "Ingresar dirección válida";
   }

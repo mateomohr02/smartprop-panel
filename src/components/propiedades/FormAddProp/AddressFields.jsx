@@ -39,8 +39,9 @@ const AddressFields = ({
       location: {
         ...prev.location,
         address: formattedAddress || null, // ✅ aseguro que se guarde en location
-      },
-    }));
+      },      
+    } 
+  ));
 
     if (hasTriedSubmit) {
       const validationErrors = validateAddPropertyForm({

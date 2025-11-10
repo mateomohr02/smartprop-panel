@@ -32,6 +32,17 @@ const FormAddProperty = ({ property, setProperty }) => {
   const [errors, setErrors] = useState({});
   const [hasTriedSubmit, setHasTriedSubmit] = useState(false);
 
+  const hasRealErrors = (errors) => {
+    const checkObject = (obj) =>
+      Object.values(obj).some((val) => {
+        if (Array.isArray(val)) return val.some(checkObject);
+        if (typeof val === "object" && val !== null) return checkObject(val);
+        return !!val;
+      });
+
+    return checkObject(errors);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -39,10 +50,13 @@ const FormAddProperty = ({ property, setProperty }) => {
     const validationErrors = validateAddPropertyForm(property);
     setErrors(validationErrors);
 
-    if (Object.keys(validationErrors).length > 0) {
-      console.log("Errores de validación:", validationErrors);
+    if (hasRealErrors(validationErrors)) {
+      console.log("❌ Errores de validación:", validationErrors);
       return;
     }
+
+    console.log(property, 'property');
+    
 
     try {
       const response = await submitProperty(property);
@@ -54,7 +68,7 @@ const FormAddProperty = ({ property, setProperty }) => {
 
   return (
     <>
-       <form
+      <form
         onSubmit={handleSubmit}
         className="w-full bg-contrast rounded-sm p-2 gap-2 flex flex-col items-center justify-center"
       >
@@ -100,13 +114,13 @@ const FormAddProperty = ({ property, setProperty }) => {
           setErrors={setErrors}
           hasTriedSubmit={hasTriedSubmit}
         />
-          <SurfaceFields
-            property={property}
-            setProperty={setProperty}
-            errors={errors}
-            setErrors={setErrors}
-            hasTriedSubmit={hasTriedSubmit}
-          />
+        <SurfaceFields
+          property={property}
+          setProperty={setProperty}
+          errors={errors}
+          setErrors={setErrors}
+          hasTriedSubmit={hasTriedSubmit}
+        />
         <ServicesSelector
           property={property}
           setProperty={setProperty}
@@ -191,10 +205,8 @@ const FormAddProperty = ({ property, setProperty }) => {
           setErrors={setErrors}
           hasTriedSubmit={hasTriedSubmit}
         />
-      </form> 
-      {
-        loading && <LoadingComponent message={progress}/>
-      }
+      </form>
+      {loading && <LoadingComponent message={progress} />}
     </>
   );
 };

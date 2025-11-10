@@ -109,11 +109,12 @@ const ComoditiesField = ({
         />
       </div>
 
-      {errors.comodities && (
-        <label htmlFor="comoditiesError" className="text-red-500 text-sm">
-          {errors.comodities}
-        </label>
-      )}
+      {Array.isArray(errors?.comodities) &&
+        errors?.rooms.some((e) => Object.keys(e).length > 0) && (
+          <label htmlFor="roomsError" className="text-red-500 text-sm">
+            Revisá las comodidades, hay errores.
+          </label>
+        )}
 
       {suggestionsVisible &&
         inputValue.trim() !== "" &&

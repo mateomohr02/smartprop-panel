@@ -108,11 +108,12 @@ const CharacteristicsField = ({
         />
       </div>
 
-      {errors.characteristics && (
-        <label htmlFor="characteristicsError" className="text-red-500 text-sm">
-          {errors.characteristics}
-        </label>
-      )}
+      {Array.isArray(errors?.characteristics) &&
+        errors?.rooms.some((e) => Object.keys(e).length > 0) && (
+          <label htmlFor="roomsError" className="text-red-500 text-sm">
+            Revisá las características, hay errores.
+          </label>
+        )}
 
       {suggestionsVisible &&
         inputValue.trim() !== "" &&

@@ -103,8 +103,12 @@ const PriceAndExpensesFields = ({
             type="number"
             placeholder="Ingrese el Valor"
             className="p-2 rounded-sm w-full shadow-sm bg-third"
-            value={property.data.expenses || ""}
-            onChange={(e) => handleChange({ expenses: e.target.value })}
+            value={property.data.expenses.value || ""}
+            onChange={(e) =>
+              handleChange({
+                expenses: { ...property.data.expenses, value: e.target.value },
+              })
+            }
           />
         </div>
 
@@ -112,7 +116,7 @@ const PriceAndExpensesFields = ({
           <div className="flex justify-between items-baseline">
             <label htmlFor="expensesFIAT">Divisa</label>
             <label htmlFor="expensesFIATError" className="text-red-500 text-sm">
-              {errors?.data?.expensesFIAT && errors.data.expensesFIAT}
+              {errors?.data?.expensesCurrency && errors.data.expensesCurrency}
             </label>
           </div>
 
@@ -120,9 +124,13 @@ const PriceAndExpensesFields = ({
             <select
               id="expensesFIAT"
               name="expensesFIAT"
-              value={property.data.expensesFIAT || ""}
+              value={property.data.expenses.currency || ""}
               className="appearance-none w-full p-2 rounded-sm px-3 pr-10 bg-third drop-shadow-sm"
-              onChange={(e) => handleChange({ expensesFIAT: e.target.value })}
+              onChange={(e) =>
+              handleChange({
+                expenses: { ...property.data.expenses, currency: e.target.value },
+              })
+            }
             >
               <option value="" disabled>
                 Seleccione la Divisa

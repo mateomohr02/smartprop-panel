@@ -220,11 +220,12 @@ const RoomsFields = ({
         </button>
       </div>
 
-      {errors.rooms && (
-        <label htmlFor="roomsError" className="text-red-500 text-sm">
-          {errors.rooms}
-        </label>
-      )}
+      {Array.isArray(errors?.rooms) &&
+        errors?.rooms.some((e) => Object.keys(e).length > 0) && (
+          <label htmlFor="roomsError" className="text-red-500 text-sm">
+            Revisá los ambientes, hay errores.
+          </label>
+        )}
     </div>
   );
 };

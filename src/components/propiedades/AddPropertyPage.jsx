@@ -13,7 +13,7 @@ const AddPropertyPage = () => {
     },
     data: {
       price: { currency: "USD", value: null },
-      expenses: null,
+      expenses: { currency: null, value: null },
       financing: "Consultar",
       rooms: null,
       bedrooms: null,
